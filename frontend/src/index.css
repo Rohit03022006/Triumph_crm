@@ -1,0 +1,182 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@import "@fontsource-variable/public-sans";
+@import "@fontsource-variable/sora";
+
+
+@theme inline {
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Sora", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-soft: var(--brand-soft);
+
+  --color-amber: var(--amber);
+  --color-ivory: var(--ivory);
+  --color-teal: var(--teal);
+  --color-mint: var(--mint);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-purple: var(--purple);
+  --color-danger: var(--danger);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --sidebar-muted-foreground: #5e96b3;
+}
+
+:root {
+  /* Light Mode */
+  --background: #F8F8F3;
+  --foreground: #0E3756;
+
+  --card: #FFFFFF;
+  --card-foreground: #0E3756;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #0E3756;
+
+  --brand: #0E3756;
+  --brand-dark: #26637e;
+  --brand-soft: #c9f7ff;
+
+  --primary: #0E3756;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #FFFFFF;
+  --secondary-foreground: #0E3756;
+
+  --muted: #f1f1e6;
+  --muted-foreground: #5e96b3;
+  --muted-text: #26637e;
+
+  --accent: #c9f7ff;
+  --accent-foreground: #0E3756;
+
+  --amber: #ef972c;
+  --ivory: #f1f1e6;
+  --teal: #00ab94;
+  --mint: #B0E298;
+
+  --destructive: #D92D20;
+  --danger: #D92D20;
+
+  --border: #E2E2D6;
+  --input: #B9D0DC;
+  --ring: #c9f7ff;
+
+  --success: #00ab94;
+  --warning: #ef972c;
+  --info: #5e96b3;
+  --purple: #7f56d9;
+
+  --chart-1: #0E3756;
+  --chart-2: #00ab94;
+  --chart-3: #ef972c;
+  --chart-4: #5e96b3;
+  --chart-5: #B0E298;
+
+  --radius: 0.5rem;
+
+  /* Sidebar */
+  --sidebar: #0E3756;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #ef972c;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #26637e;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #1B4A5E;
+  --sidebar-ring: #ef972c;
+}
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-heading);
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+}

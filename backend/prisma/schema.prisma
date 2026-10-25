@@ -1,0 +1,139 @@
+generator client {
+    provider = "prisma-client-js"
+}
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    ADMIN
+    EXECUTIVE
+}
+
+enum Department {
+    PRE_SALES
+    SALES
+    LEASING
+    CRM
+}
+
+model User {
+    id            String      @id @default(cuid())
+    name          String
+    email         String      @unique
+    password      String?     // Added for custom auth
+    emailVerified Boolean     @default(false)
+    image         String?
+    phone         String?
+    address       String?
+    role          Role
+    department    Department?
+    officeNumber  String?
+    isActive      Boolean     @default(true)
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+
+    sessions Session[]
+    accounts Account[]
+
+    @@index([role])
+    @@index([department])
+}
+
+model Session {
+    id        String   @id @default(cuid())
+    userId    String
+    token     String   @unique
+    expiresAt DateTime
+    ipAddress String?
+    userAgent String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model Account {
+    id                    String    @id @default(cuid())
+    userId                String
+    accountId             String
+    providerId            String
+    password              String?
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model Verification {
+    id         String   @id @default(cuid())
+    identifier String // email address
+    value      String // OTP code (hashed)
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([identifier])
+}
+
+// ==========================================
+// RESOURCES & SETTINGS (FR-4.4 - FR-4.6)
+// ==========================================
+
+model LeadSource {
+    id        String   @id @default(cuid())
+    name      String   @unique
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model InventoryCategory {
+    id        String   @id @default(cuid())
+    name      String   @unique
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model PipelineStage {
+    id        String   @id @default(cuid())
+    name      String   @unique
+    order     Int      @default(0)
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Stubs for future modules to satisfy FR-4.7 import
+model Lead {
+    id          String   @id @default(cuid())
+    firstName   String
+    lastName    String
+    email       String?
+    phone       String?
+    sourceId    String?
+    stageId     String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model InventoryItem {
+    id          String   @id @default(cuid())
+    title       String
+    price       Float?
+    categoryId  String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}

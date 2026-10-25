@@ -1,0 +1,57 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "npx prisma migrate deploy && node src/server.js",
+    "db:seed": "npx prisma db seed",
+    "lint": "eslint src",
+    "format": "prettier --write src",
+    "test": "vitest run",
+    "prisma:studio": "npx prisma studio",
+    "prisma:migrate": "npx prisma migrate dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "overrides": {
+    "deepmerge-ts": "^8.0.0",
+    "fast-csv": "^4.3.6",
+    "tmp": "^0.2.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1136.0",
+    "@aws-sdk/s3-request-presigner": "^3.1136.0",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "better-auth": "^1.7.5",
+    "bullmq": "^6.3.8",
+    "compression": "^1.8.2",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.1",
+    "exceljs": "^3.4.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "ioredis": "^6.0.0",
+    "multer": "^2.4.0",
+    "pdfkit": "^0.20.2",
+    "prisma": "^6.19.3",
+    "rate-limit-redis": "^6.0.1",
+    "resend": "^6.28.1",
+    "sharp": "^0.35.4",
+    "socket.io": "^4.8.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.8",
+    "supertest": "^7.2.2",
+    "vitest": "^5.0.1"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}
