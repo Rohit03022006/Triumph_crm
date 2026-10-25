@@ -48,16 +48,16 @@ const getNavItems = (role) => {
       title: "Reports",
       url: `${prefix}/reports`,
       icon: BarChart3,
-    },
-    {
-      title: "Approved",
-      url: `${prefix}/approved`,
-      icon: CheckCircle,
-    },
+    }
   ];
 
   if (role === "ADMIN") {
     items.push(
+      {
+        title: "Approved",
+        url: `${prefix}/approved`,
+        icon: CheckCircle,
+      },
       {
         title: "Users Management",
         url: `${prefix}/users`,

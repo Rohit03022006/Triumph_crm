@@ -10,7 +10,9 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
     <Card className="col-span-1 md:col-span-2 border-border/60 shadow-sm">
       <CardHeader>
         <CardTitle>Personal Information</CardTitle>
-        <CardDescription>Update your personal details and contact information.</CardDescription>
+        <CardDescription>
+          Update your personal details and contact information.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -24,7 +26,9 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
                   placeholder="Your full name"
                   className="pl-9"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -41,7 +45,9 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
                   disabled
                 />
               </div>
-              <p className="text-[11px] text-muted-foreground">Email cannot be changed.</p>
+              <p className="text-[11px] text-muted-foreground">
+                Email cannot be changed.
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -52,8 +58,14 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
                   id="phone"
                   placeholder="+1 (555) 000-0000"
                   className="pl-9"
+                  maxLength={10}
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      phone: e.target.value.replace(/\D/g, "").slice(0, 10),
+                    })
+                  }
                 />
               </div>
             </div>
@@ -67,7 +79,9 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
                   placeholder="Your location"
                   className="pl-9"
                   value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -79,7 +93,7 @@ const ProfileForm = ({ user, formData, setFormData, handleSubmit, isPending }) =
               disabled={isPending}
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
             >
-              {isPending ? 'Saving...' : 'Save Changes'}
+              {isPending ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

@@ -85,9 +85,11 @@ const Header = () => {
                   Profile
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={() => navigate(user?.role === "ADMIN" ? "/admin/settings" : "/executive/settings")} className="cursor-pointer">
-                  Settings
-                </DropdownMenuItem>
+                {user?.role === "ADMIN" && (
+                  <DropdownMenuItem onClick={() => navigate("/admin/settings")} className="cursor-pointer">
+                    Settings
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />

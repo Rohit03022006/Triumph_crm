@@ -6,6 +6,11 @@ import ExecutivesFilters from '../../components/Executives_Management/Executives
 import UserFormDialog from '../../components/Executives_Management/UserFormDialog'
 import UsersTable from '../../components/Executives_Management/UsersTable'
 import UsersGrid from '../../components/Executives_Management/UsersGrid'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Eye, EyeOff, Lock } from 'lucide-react'
 
 
 const fetchUsers = async () => {
@@ -80,6 +85,12 @@ const Executives = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
   
   // Forms
   const defaultForm = { name: '', email: '', password: '', role: 'EXECUTIVE', phone: '', address: '', isActive: true, emailVerified: true };
@@ -108,6 +119,31 @@ const Executives = () => {
     onError: (err) => alert(err.message)
   });
 
+  const resetPasswordMut = useMutation({
+    mutationFn: async ({ id, password }) => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${id}/password`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || "Failed to update password");
+      return data;
+    },
+    onSuccess: (data) => {
+      setPasswordSuccess(data?.message || "Password successfully updated.");
+      setNewPassword('');
+      setTimeout(() => {
+        setIsPasswordDialogOpen(false);
+        setPasswordSuccess('');
+      }, 1500);
+    },
+    onError: (err) => {
+      setPasswordError(err.message);
+    }
+  });
+
   const verifyMut = useMutation({
     mutationFn: verifyUser,
     onSuccess: () => queryClient.invalidateQueries(['users'])
@@ -129,9 +165,13 @@ const Executives = () => {
   };
   
   const handleEditSubmit = (finalData) => { 
+    const payload = { ...finalData };
+    if (!payload.password || !payload.password.trim()) {
+      delete payload.password;
+    }
     updateMut.mutate({ 
       id: selectedUser?.id, 
-      data: finalData 
+      data: payload 
     }); 
   };
 
@@ -144,9 +184,29 @@ const Executives = () => {
       phone: user.phone || '',
       address: user.address || '',
       image: user.image || null, 
-      isActive: user.isActive 
+      isActive: user.isActive,
+      password: ''
     });
     setIsEditOpen(true);
+  };
+
+  const openResetPassword = (user) => {
+    setSelectedUser(user);
+    setPasswordError('');
+    setPasswordSuccess('');
+    setNewPassword('');
+    setIsPasswordDialogOpen(true);
+  };
+
+  const handlePasswordResetSubmit = (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess('');
+    if (!newPassword || newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters long.');
+      return;
+    }
+    resetPasswordMut.mutate({ id: selectedUser?.id, password: newPassword });
   };
 
   // Filter Logic
@@ -213,9 +273,9 @@ const Executives = () => {
 
         {/* Table */}
         {viewMode === "list" ? (
-          <UsersTable users={paginatedUsers} totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} isLoading={isLoading} onVerify={(id) => verifyMut.mutate(id)} onEdit={openEdit} onDelete={(id) => deleteMut.mutate(id)} selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
+          <UsersTable users={paginatedUsers} totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} isLoading={isLoading} onVerify={(id) => verifyMut.mutate(id)} onEdit={openEdit} onResetPassword={openResetPassword} onDelete={(id) => deleteMut.mutate(id)} selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
         ) : (
-          <UsersGrid users={paginatedUsers} totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} isLoading={isLoading} onVerify={(id) => verifyMut.mutate(id)} onEdit={openEdit} onDelete={(id) => deleteMut.mutate(id)} />
+          <UsersGrid users={paginatedUsers} totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} isLoading={isLoading} onVerify={(id) => verifyMut.mutate(id)} onEdit={openEdit} onResetPassword={openResetPassword} onDelete={(id) => deleteMut.mutate(id)} />
         )}
       </div>
 
@@ -240,6 +300,68 @@ const Executives = () => {
         isPending={updateMut.isPending}
         isEdit={true}
       />
+
+      {/* Admin Reset Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Change Staff Password</DialogTitle>
+            <DialogDescription>
+              Set a new password for <span className="font-semibold text-foreground">{selectedUser?.name}</span>. The executive will use this new password to sign in.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handlePasswordResetSubmit} className="space-y-4 pt-2">
+            {passwordError && (
+              <div className="bg-danger/10 text-danger p-3 rounded-md text-sm">{passwordError}</div>
+            )}
+            {passwordSuccess && (
+              <div className="bg-success/10 text-success p-3 rounded-md text-sm">{passwordSuccess}</div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="staff-new-password">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="staff-new-password"
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="Enter at least 8 characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  minLength={8}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                >
+                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <DialogFooter className="pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsPasswordDialogOpen(false)}
+                disabled={resetPasswordMut.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={resetPasswordMut.isPending}
+                className="bg-primary hover:bg-brand-dark text-primary-foreground"
+              >
+                {resetPasswordMut.isPending ? "Updating..." : "Update Password"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

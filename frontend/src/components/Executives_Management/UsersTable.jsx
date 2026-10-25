@@ -17,9 +17,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ShieldCheck, Edit, UserX, MoreVertical, User } from "lucide-react";
+import { ShieldCheck, Edit, UserX, MoreVertical, User, Lock } from "lucide-react";
 
-const UsersTable = ({ users, totalPages, currentPage, onPageChange, isLoading, onVerify, onEdit, onDelete, selectedIds = [], setSelectedIds }) => {
+const UsersTable = ({ users, totalPages, currentPage, onPageChange, isLoading, onVerify, onEdit, onResetPassword, onDelete, selectedIds = [], setSelectedIds }) => {
   const navigate = useNavigate();
   
   const allIdsOnPage = users?.map(u => u.id) || [];
@@ -161,6 +161,15 @@ const UsersTable = ({ users, totalPages, currentPage, onPageChange, isLoading, o
                       >
                         <Edit className="w-4 h-4 mr-2" /> Edit Staff
                       </DropdownMenuItem>
+
+                      {onResetPassword && (
+                        <DropdownMenuItem
+                          onClick={() => onResetPassword(user)}
+                          className="cursor-pointer font-medium text-foreground/80"
+                        >
+                          <Lock className="w-4 h-4 mr-2" /> Change Password
+                        </DropdownMenuItem>
+                      )}
                       
                       <DropdownMenuItem
                         className="cursor-pointer font-medium text-danger focus:text-danger focus:bg-danger/10"

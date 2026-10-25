@@ -9,6 +9,7 @@ import Dashboard from './Pages/Dashboard/Admin_Dashboard/Dashboard'
 import Leads from './Pages/Leads/Leads'
 import Inventory from './Pages/Inventory/Inventory'
 import Reports from './Pages/Reports/Reports'
+import Approved from './Pages/Dashboard/Approved_Dashboard/Approved'
 import Executives from './Pages/Executives_Management/Executives'
 import UserDetail from './Pages/Executives_Management/UserDetail'
 import Settings from './Pages/Settings/Settings'
@@ -58,6 +59,7 @@ const App = () => {
         <Route path="leads" element={<Leads />} />
         <Route path="inventory" element={<Inventory />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="approved" element={<Approved />} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<ExecutiveSettings />} />
       </Route>

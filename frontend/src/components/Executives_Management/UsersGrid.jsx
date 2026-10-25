@@ -1,10 +1,10 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Edit, UserX, User, Mail, Phone, Briefcase } from "lucide-react";
+import { ShieldCheck, Edit, UserX, User, Mail, Phone, Briefcase, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const UsersGrid = ({ users, totalPages, currentPage, onPageChange, isLoading, onVerify, onEdit, onDelete }) => {
+const UsersGrid = ({ users, totalPages, currentPage, onPageChange, isLoading, onVerify, onEdit, onResetPassword, onDelete }) => {
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -63,6 +63,11 @@ const UsersGrid = ({ users, totalPages, currentPage, onPageChange, isLoading, on
               <Button variant="ghost" size="icon" className="h-8 w-8 bg-white shadow-sm border text-foreground/70 hover:text-primary hover:bg-primary/10" onClick={() => onEdit(user)} title="Edit">
                 <Edit className="w-4 h-4" />
               </Button>
+              {onResetPassword && (
+                <Button variant="ghost" size="icon" className="h-8 w-8 bg-white shadow-sm border text-foreground/70 hover:text-primary hover:bg-primary/10" onClick={() => onResetPassword(user)} title="Change Password">
+                  <Lock className="w-4 h-4" />
+                </Button>
+              )}
               <Button variant="ghost" size="icon" className="h-8 w-8 bg-white shadow-sm border text-danger hover:text-danger hover:bg-danger/10" onClick={() => {
                 if (confirm("Are you sure you want to completely delete this user?")) onDelete(user.id);
               }} title="Delete">

@@ -11,9 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import imageCompression from "browser-image-compression";
-import { Camera } from "lucide-react";
+import { Camera, Users, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, CheckCircle2 } from "lucide-react";
 
 const UserFormDialog = ({
   isOpen,
@@ -25,6 +24,7 @@ const UserFormDialog = ({
   isPending,
   isEdit,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -169,21 +169,63 @@ const UserFormDialog = ({
                 </div>
               </div>
 
-              {!isEdit && (
+              {isEdit ? (
+                <div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs text-slate-500">
+                        Reset Password
+                      </Label>
+                      <span className="text-[11px] text-muted-foreground">
+                        Leave blank to keep current password
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter new password (min. 8 characters)"
+                        value={data.password || ""}
+                        onChange={(e) =>
+                          setData({ ...data, password: e.target.value })
+                        }
+                        minLength={8}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
                 <div>
                   <div className="space-y-2">
                     <Label className="text-xs text-slate-500">
                       Temporary Password <span className="text-danger">*</span>
                     </Label>
-                    <Input
-                      type="password"
-                      value={data.password}
-                      onChange={(e) =>
-                        setData({ ...data, password: e.target.value })
-                      }
-                      required
-                      minLength={8}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={data.password || ""}
+                        onChange={(e) =>
+                          setData({ ...data, password: e.target.value })
+                        }
+                        required
+                        minLength={8}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

@@ -56,11 +56,21 @@ export const createUser = asyncHandler(async (req, res) => {
 // PATCH /api/v1/users/:id (Admin edits user)
 export const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, role, phone, address, image, isActive, department, officeNumber, emailVerified } = req.body;
+  const { name, role, phone, address, image, isActive, department, officeNumber, emailVerified, password } = req.body;
 
   if (req.user.id === id) {
     if (role && role !== "ADMIN") throw new AppError("You cannot demote yourself.", 403);
     if (isActive === false) throw new AppError("You cannot deactivate your own account.", 403);
+  }
+
+  let hashedPassword;
+  if (password && typeof password === "string" && password.trim().length > 0) {
+    if (password.trim().length < 8) {
+      throw new AppError("Password must be at least 8 characters long.", 400);
+    }
+    const hasher = bcrypt.default || bcrypt;
+    const salt = await hasher.genSalt(10);
+    hashedPassword = await hasher.hash(password.trim(), salt);
   }
 
   const user = await prisma.user.update({
@@ -71,17 +81,22 @@ export const updateUser = asyncHandler(async (req, res) => {
       isActive: true, createdAt: true, updatedAt: true
     },
     data: {
-      name,
-      role,
-      phone,
-      address,
-      image,
-      isActive,
-      department,
-      officeNumber,
-      ...(emailVerified !== undefined && { emailVerified })
+      ...(name !== undefined && { name }),
+      ...(role !== undefined && { role }),
+      ...(phone !== undefined && { phone }),
+      ...(address !== undefined && { address }),
+      ...(image !== undefined && { image }),
+      ...(isActive !== undefined && { isActive }),
+      ...(department !== undefined && { department }),
+      ...(officeNumber !== undefined && { officeNumber }),
+      ...(emailVerified !== undefined && { emailVerified }),
+      ...(hashedPassword && { password: hashedPassword })
     }
   });
+
+  if (hashedPassword) {
+    await prisma.session.deleteMany({ where: { userId: id } });
+  }
 
   res.json({ success: true, data: user });
 });
@@ -185,8 +200,45 @@ export const updateMe = asyncHandler(async (req, res) => {
 });
 
 
+// PATCH /api/v1/users/:id/password (Admin resets an executive/user password)
+export const resetUserPassword = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  if (!password || typeof password !== "string" || password.trim().length < 8) {
+    throw new AppError("Password must be at least 8 characters long.", 400);
+  }
+
+  const targetUser = await prisma.user.findUnique({ where: { id } });
+  if (!targetUser) {
+    throw new AppError("User not found.", 404);
+  }
+
+  const hasher = bcrypt.default || bcrypt;
+  const salt = await hasher.genSalt(10);
+  const hashedPassword = await hasher.hash(password.trim(), salt);
+
+  await prisma.user.update({
+    where: { id },
+    data: { password: hashedPassword }
+  });
+
+  // Invalidate target user's active sessions so they must re-authenticate with the new password
+  await prisma.session.deleteMany({ where: { userId: id } });
+
+  res.json({ success: true, message: `Password successfully updated for ${targetUser.name}.` });
+});
+
 export const updatePassword = async (req, res, next) => {
   try {
+    // Only ADMIN can change passwords in settings
+    if (req.user?.role !== "ADMIN") {
+      return res.status(403).json({
+        success: false,
+        error: { message: "Executives cannot change their password. Only administrators can change executive passwords." }
+      });
+    }
+
     const { currentPassword, newPassword } = req.body;
     
     if (!currentPassword || !newPassword) {
@@ -202,12 +254,13 @@ export const updatePassword = async (req, res, next) => {
       return res.status(404).json({ success: false, error: { message: "User not found." }});
     }
 
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    const hasher = bcrypt.default || bcrypt;
+    const isMatch = await hasher.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ success: false, error: { message: "Incorrect current password." }});
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await hasher.hash(newPassword, 10);
     await prisma.user.update({
       where: { id: req.user.id },
       data: { password: hashedPassword }

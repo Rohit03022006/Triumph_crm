@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import UserFormDialog from '../../components/Executives_Management/UserFormDialog';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, User, Phone, Mail, MapPin, Briefcase, Edit } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, User, Phone, Mail, MapPin, Briefcase, Edit, Lock, Eye, EyeOff } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const fetchUser = async (id) => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, { credentials: "include" });
@@ -25,6 +27,12 @@ const UserDetail = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editData, setEditData] = useState({});
 
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+
   const { data: user, isLoading, isError, error } = useQuery({ 
     queryKey: ['user', id], 
     queryFn: () => fetchUser(id)
@@ -32,17 +40,25 @@ const UserDetail = () => {
 
   const updateMutation = useMutation({
     mutationFn: async (updatedUser) => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${updatedUser.id}`, {
+      const payload = { ...updatedUser };
+      if (!payload.password || !payload.password.trim()) {
+        delete payload.password;
+      }
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${payload.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(updatedUser),
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Failed to update user");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData?.error?.message || "Failed to update user");
+      }
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user', id] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
       setIsEditOpen(false);
     },
     onError: (err) => {
@@ -50,11 +66,49 @@ const UserDetail = () => {
     }
   });
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (password) => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${id}/password`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error?.message || "Failed to reset password");
+      }
+      return data;
+    },
+    onSuccess: (data) => {
+      setPasswordSuccess(data?.message || "Password successfully updated.");
+      setNewPassword('');
+      setTimeout(() => {
+        setIsPasswordDialogOpen(false);
+        setPasswordSuccess('');
+      }, 1500);
+    },
+    onError: (err) => {
+      setPasswordError(err.message);
+    }
+  });
+
   const handleEditClick = () => {
     if (user) {
-      setEditData({ ...user });
+      setEditData({ ...user, password: '' });
       setIsEditOpen(true);
     }
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess('');
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters long.');
+      return;
+    }
+    resetPasswordMutation.mutate(newPassword);
   };
 
   if (isLoading) return <div className="p-8 text-center text-muted-foreground">Loading user details...</div>;
@@ -78,9 +132,23 @@ const UserDetail = () => {
             </div>
           </div>
         </div>
-        <Button onClick={handleEditClick} className="bg-primary hover:bg-brand-dark text-primary-foreground">
-          <Edit className="w-4 h-4 mr-2" /> Edit Profile
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setPasswordError('');
+              setPasswordSuccess('');
+              setNewPassword('');
+              setIsPasswordDialogOpen(true);
+            }}
+            className="border-border text-foreground hover:bg-muted"
+          >
+            <Lock className="w-4 h-4 mr-2" /> Change Password
+          </Button>
+          <Button onClick={handleEditClick} className="bg-primary hover:bg-brand-dark text-primary-foreground">
+            <Edit className="w-4 h-4 mr-2" /> Edit Profile
+          </Button>
+        </div>
       </div>
 
       {/* Main Content Grid */}
@@ -162,6 +230,68 @@ const UserDetail = () => {
         isPending={updateMutation.isPending}
         isEdit={true}
       />
+
+      {/* Admin Reset Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Change Password</DialogTitle>
+            <DialogDescription>
+              Set a new password for <span className="font-semibold text-foreground">{user.name}</span>. The executive will use this new password to sign in.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 pt-2">
+            {passwordError && (
+              <div className="bg-danger/10 text-danger p-3 rounded-md text-sm">{passwordError}</div>
+            )}
+            {passwordSuccess && (
+              <div className="bg-success/10 text-success p-3 rounded-md text-sm">{passwordSuccess}</div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="admin-new-password">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="admin-new-password"
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="Enter at least 8 characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  minLength={8}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                >
+                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <DialogFooter className="pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsPasswordDialogOpen(false)}
+                disabled={resetPasswordMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={resetPasswordMutation.isPending}
+                className="bg-primary hover:bg-brand-dark text-primary-foreground"
+              >
+                {resetPasswordMutation.isPending ? "Updating..." : "Update Password"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
