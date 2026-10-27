@@ -47,22 +47,22 @@ export const getDealTypeTheme = (dealType) => {
     case "BOOKING":
       return {
         label: "Booking",
-        badgeClass: "border-primary/30 bg-primary/10 text-primary",
+        badgeClass: "bg-sky-50 text-sky-800 border-sky-200",
       };
     case "RETRADE":
       return {
         label: "Retrade",
-        badgeClass: "border-warning/30 bg-warning/10 text-warning",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
       };
     case "LEASE":
       return {
         label: "Lease",
-        badgeClass: "border-success/30 bg-success/10 text-success",
+        badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200",
       };
     default:
       return {
         label: dealType,
-        badgeClass: "border-border/40 bg-muted/30 text-muted-foreground",
+        badgeClass: "bg-slate-50 text-slate-700 border-slate-200",
       };
   }
 };
@@ -72,32 +72,32 @@ export const getStatusTheme = (status) => {
     case "AVAILABLE":
       return {
         label: "Available",
-        badgeClass: "border-success/30 bg-success/10 text-success",
+        badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200",
       };
     case "UNDER_REVIEW":
       return {
         label: "Under Review",
-        badgeClass: "border-warning/30 bg-warning/10 text-warning",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
       };
     case "SOLD":
       return {
         label: "Sold",
-        badgeClass: "border-purple/30 bg-purple/10 text-purple",
+        badgeClass: "bg-purple/10 text-purple border-purple/20",
       };
     case "RENT_OUT":
       return {
         label: "Rented Out",
-        badgeClass: "border-info/30 bg-info/10 text-info",
+        badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
       };
     case "LOST":
       return {
         label: "Lost",
-        badgeClass: "border-danger/30 bg-danger/10 text-danger",
+        badgeClass: "bg-rose-50 text-rose-800 border-rose-200",
       };
     default:
       return {
         label: status || "Unknown",
-        badgeClass: "border-border/40 bg-muted text-muted-foreground",
+        badgeClass: "bg-slate-50 text-slate-700 border-slate-200",
       };
   }
 };

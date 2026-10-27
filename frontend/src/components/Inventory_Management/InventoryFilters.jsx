@@ -31,26 +31,26 @@ const InventoryFilters = ({
   );
 
   return (
-    <div className="flex flex-col xl:flex-row items-center justify-between gap-4 p-4 border-b border-border/60">
-      {/* Search Input matching ExecutivesFilters */}
+    <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3.5 p-3 sm:p-4 border-b border-border/70 bg-slate-50/40">
+      {/* Search Input */}
       <div className="relative w-full xl:max-w-sm">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
         <Input
           placeholder="Search properties, developers, locations..."
-          className="pl-9 pr-9 bg-muted/50 border border-border/60 rounded-full h-10 text-sm"
+          className="pl-9 pr-4 bg-muted/40 border border-border/70 rounded-full h-10 text-sm focus-visible:ring-1"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
       </div>
 
       {/* Filter Selects & Controls */}
-      <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
+      <div className="flex flex-wrap items-center gap-2.5 w-full xl:w-auto justify-start xl:justify-end">
         {/* Deal Type Dropdown */}
         <select
           value={dealTypeFilter}
           onChange={(e) => setDealTypeFilter(e.target.value)}
           aria-label="Filter by deal type"
-          className="rounded-full h-10 px-4 text-sm font-medium border border-border/60 bg-background text-foreground outline-none cursor-pointer hover:border-border transition-colors"
+          className="rounded-full h-10 px-3.5 text-xs sm:text-sm font-medium border border-border/70 bg-background text-foreground outline-none cursor-pointer hover:border-slate-400 transition-colors shadow-2xs"
         >
           <option value="ALL">All Deal Types</option>
           <option value="BOOKING">Booking (New)</option>
@@ -63,7 +63,7 @@ const InventoryFilters = ({
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
           aria-label="Filter by category"
-          className="rounded-full h-10 px-4 text-sm font-medium border border-border/60 bg-background text-foreground outline-none cursor-pointer hover:border-border transition-colors"
+          className="rounded-full h-10 px-3.5 text-xs sm:text-sm font-medium border border-border/70 bg-background text-foreground outline-none cursor-pointer hover:border-slate-400 transition-colors shadow-2xs"
         >
           <option value="ALL">All Categories</option>
           <option value="Residential">Residential</option>
@@ -76,7 +76,7 @@ const InventoryFilters = ({
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           aria-label="Filter by status"
-          className="rounded-full h-10 px-4 text-sm font-medium border border-border/60 bg-background text-foreground outline-none cursor-pointer hover:border-border transition-colors"
+          className="rounded-full h-10 px-3.5 text-xs sm:text-sm font-medium border border-border/70 bg-background text-foreground outline-none cursor-pointer hover:border-slate-400 transition-colors shadow-2xs"
         >
           <option value="ALL">All Status</option>
           <option value="AVAILABLE">Available</option>
@@ -91,7 +91,7 @@ const InventoryFilters = ({
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
           aria-label="Sort properties by"
-          className="rounded-full h-10 px-4 text-sm font-medium border border-border/60 bg-background text-foreground outline-none cursor-pointer hover:border-border transition-colors"
+          className="rounded-full h-10 px-3.5 text-xs sm:text-sm font-medium border border-border/70 bg-background text-foreground outline-none cursor-pointer hover:border-slate-400 transition-colors shadow-2xs"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -106,38 +106,38 @@ const InventoryFilters = ({
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="group rounded-full h-10 px-3.5 text-sm text-red-500 hover:text-red-800 active:scale-95 transition-all"
+            className="group rounded-full h-10 px-3 text-xs sm:text-sm text-red-500 hover:text-red-700 hover:bg-red-50 active:scale-95 transition-all"
             title="Reset Filters"
           >
-            <RotateCcw className="w-4 h-4 mr-1.5 transition-transform duration-500 group-hover:-rotate-180" /> Reset
+            <RotateCcw className="w-3.5 h-3.5 mr-1.5 transition-transform duration-500 group-hover:-rotate-180" /> Reset
           </Button>
         )}
 
-        {/* View Mode Toggle matching ExecutivesFilters */}
-        <div className="flex bg-muted/50 p-1 rounded-full border border-border ml-auto xl:ml-0">
+        {/* View Mode Toggle */}
+        <div className="flex bg-slate-100 p-0.5 rounded-full border border-border/70 shadow-2xs ml-auto xl:ml-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setViewMode("list")}
-            className={`rounded-full h-8 px-3.5 text-sm font-medium ${
+            className={`rounded-full h-8 px-3 text-xs font-semibold transition-all ${
               viewMode === "list"
-                ? "bg-white shadow-sm text-foreground font-semibold"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-white shadow-2xs text-slate-900"
+                : "text-slate-500 hover:text-slate-900"
             }`}
           >
-            <List className="w-4 h-4 mr-2" /> List
+            <List className="w-3.5 h-3.5 mr-1.5" /> List
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setViewMode("grid")}
-            className={`rounded-full h-8 px-3.5 text-sm font-medium ${
+            className={`rounded-full h-8 px-3 text-xs font-semibold transition-all ${
               viewMode === "grid"
-                ? "bg-white shadow-sm text-foreground font-semibold"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-white shadow-2xs text-slate-900"
+                : "text-slate-500 hover:text-slate-900"
             }`}
           >
-            <LayoutGrid className="w-4 h-4 mr-2" /> Grid
+            <LayoutGrid className="w-3.5 h-3.5 mr-1.5" /> Grid
           </Button>
         </div>
       </div>

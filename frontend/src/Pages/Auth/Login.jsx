@@ -72,20 +72,20 @@ const Login = () => {
               <img
                 src="/logo_main.png"
                 alt="Triumph Estates"
-                className="h-30 w-auto object-contain"
+                className="h-24 w-auto object-contain"
               />
             </div>
           </Link>
 
           {/* Main Text */}
           <div className="space-y-5">
-            <h1 className="text-4xl font-semibold tracking-tight lg:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight lg:text-5xl font-heading text-slate-900">
               Admin & Executive
               <br />
               <span className="text-primary">CRM Portal</span>
             </h1>
 
-            <p className="max-w-md text-base leading-7 text-muted-foreground">
+            <p className="max-w-md text-base leading-7 text-slate-500">
               Manage your real estate operations, teams, leads, properties and
               business activities from one centralized platform.
             </p>
@@ -134,13 +134,11 @@ const Login = () => {
                 {/* Password */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                    </div>
+                    <Label htmlFor="password">Password</Label>
 
                     <Link
                       to="/forgot-password"
-                      className="text-xs font-medium text-primary hover:underline"
+                      className="text-xs font-semibold text-primary hover:underline"
                     >
                       Forgot password?
                     </Link>

@@ -18,7 +18,9 @@ import {
   FileText,
   Phone,
   User,
-  Download
+  Download,
+  Lock,
+  ShieldAlert,
 } from "lucide-react";
 import { formatPrice, getDealTypeTheme, getStatusTheme } from "./InventoryTable";
 
@@ -272,30 +274,63 @@ const PropertyDetailModal = ({
 
           {/* Contact Details */}
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-4 h-4 text-primary" />
-              <span>Contact & Ownership</span>
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
-              <div>
-                <span className="text-muted-foreground block text-[11px]">
-                  {property.dealType === "BOOKING" ? "Developer Sales Person" : "Seller / Landlord Name"}
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <User className="w-4 h-4 text-primary" />
+                <span>Contact & Ownership</span>
+              </h4>
+              {property.dealType !== "BOOKING" && userRole !== "ADMIN" && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                  <Lock className="w-3 h-3" /> Admin Protected
                 </span>
-                <span className="font-semibold text-foreground">
-                  {property.dealType === "BOOKING"
-                    ? property.developerContactName || "Not assigned"
-                    : property.sellerName || "Direct"}
-                </span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Contact Phone</span>
-                <span className="font-semibold text-foreground">
-                  {property.dealType === "BOOKING"
-                    ? property.developerContactNumber || "Not available"
-                    : property.sellerPhone || "Not available"}
-                </span>
-              </div>
+              )}
             </div>
+
+            {property.dealType === "BOOKING" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
+                <div>
+                  <span className="text-muted-foreground block text-[11px]">
+                    Developer Sales Person
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {property.developerContactName || "Not assigned"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[11px]">Contact Phone</span>
+                  <span className="font-semibold text-foreground">
+                    {property.developerContactNumber || "Not available"}
+                  </span>
+                </div>
+              </div>
+            ) : userRole === "ADMIN" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
+                <div>
+                  <span className="text-muted-foreground block text-[11px]">
+                    Seller / Landlord Name
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {property.sellerName || "Direct Seller"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[11px]">Contact Phone</span>
+                  <span className="font-semibold text-foreground">
+                    {property.sellerPhone || "Not available"}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-amber-50/80 p-3 rounded-lg border border-amber-200/80 text-amber-900 space-y-1.5 text-xs">
+                <div className="flex items-center gap-2 font-bold text-amber-800">
+                  <ShieldAlert className="w-4 h-4 text-amber-600" />
+                  <span>Confidential Seller Details</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-normal">
+                  Seller and landlord contact details are protected for Administrator access. Please open the full property view to request seller clearance.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>

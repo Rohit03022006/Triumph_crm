@@ -36,6 +36,7 @@ import {
   Send,
   Clock,
   ShieldAlert,
+  Lock,
 } from "lucide-react";
 import {
   fetchPropertyById,
@@ -704,6 +705,12 @@ const InventoryFormPage = () => {
       })),
     };
 
+    // Strip protected seller info if non-admin is editing an existing property
+    if (isExecutive && isEdit) {
+      delete payload.sellerName;
+      delete payload.sellerPhone;
+    }
+
     if (isEdit) {
       updateMut.mutate(payload);
     } else {
@@ -755,7 +762,7 @@ const InventoryFormPage = () => {
   return (
     <div className="w-full max-w-full min-w-0 space-y-6 pb-20 overflow-x-hidden">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-border/70">
         <div className="flex items-center gap-4">
           <Button
             variant="outline"
@@ -768,7 +775,7 @@ const InventoryFormPage = () => {
           </Button>
 
           <div>
-            <div className="text-sm text-slate-500 flex items-center gap-2 mb-1.5 font-medium">
+            <div className="text-xs font-semibold text-slate-500 flex items-center gap-2 uppercase tracking-wider mb-1">
               <span
                 onClick={handleBackToInventory}
                 className="cursor-pointer hover:text-slate-900 transition-colors"
@@ -2971,6 +2978,18 @@ const InventoryFormPage = () => {
                         }
                       />
                     </div>
+                  </div>
+                ) : isExecutive && isEdit ? (
+                  <div className="bg-amber-50/80 p-4 rounded-xl border border-amber-200/80 text-amber-950 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 font-bold text-sm text-amber-900">
+                        <Lock className="w-4 h-4 text-amber-600" />
+                        <span>Confidential Seller Details (Admin Protected)</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Existing seller and landlord contact details are protected for Administrator access only. To request access, use the clearance request option on the property details page.
+                    </p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

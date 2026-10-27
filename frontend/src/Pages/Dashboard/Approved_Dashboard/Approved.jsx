@@ -4,9 +4,14 @@ import { fetchInventoryMetrics } from "@/api/inventory";
 import ApprovedHeader from "@/components/Approved_Management/ApprovedHeader";
 import LeadsApprovedCard from "@/components/Approved_Management/LeadsApprovedCard";
 import PropertyApprovedCard from "@/components/Approved_Management/PropertyApprovedCard";
+import ClearanceApprovedCard from "@/components/Approved_Management/ClearanceApprovedCard";
 
 const Approved = () => {
-  const { data: metrics, isFetching, refetch } = useQuery({
+  const {
+    data: metrics,
+    isFetching,
+    refetch,
+  } = useQuery({
     queryKey: ["inventoryMetrics"],
     queryFn: fetchInventoryMetrics,
     staleTime: 60 * 1000,
@@ -17,6 +22,7 @@ const Approved = () => {
 
   return (
     <div className="w-full max-w-full min-w-0 space-y-6 pb-12 overflow-x-hidden">
+      {/* Page Header */}
       <ApprovedHeader
         pendingCount={pendingCount}
         onRefresh={() => refetch()}
@@ -34,6 +40,11 @@ const Approved = () => {
         <div className="min-w-0 w-full flex flex-col">
           <PropertyApprovedCard pendingCount={pendingCount} />
         </div>
+      </div>
+
+      {/* Bottom Section: Clearance Approvals Card (Exact Same UI as Property & Leads cards) */}
+      <div className="w-full min-w-0">
+        <ClearanceApprovedCard />
       </div>
     </div>
   );

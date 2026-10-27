@@ -63,11 +63,11 @@ const UserFormDialog = ({
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-800">{title}</h3>
-                <p className="text-lg text-slate-700 ">
+                <h3 className="text-lg font-bold text-slate-800 font-heading">{title}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
                   {isEdit
-                    ? "Edit team member and assign permissions"
-                    : "Add a new team member"}
+                    ? "Edit team member profile and system permissions"
+                    : "Add a new executive or administrator to the team"}
                 </p>
               </div>
             </div>

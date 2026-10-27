@@ -25,10 +25,20 @@ const UsersGrid = ({ users, totalPages, currentPage, onPageChange, isLoading, on
             className="group relative bg-white border border-border/40 hover:border-border/80 rounded-xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center"
           >
             {/* Status Badge Absolute */}
-            <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full border text-[10px] font-semibold uppercase tracking-wider
-              ${user.emailVerified ? (user.isActive ? 'border-success/30 bg-success/10 text-success' : 'border-danger/30 bg-danger/10 text-danger') : 'border-warning/30 bg-warning/10 text-warning'}
-            `}>
-              {!user.emailVerified ? 'Pending' : (user.isActive ? 'Active' : 'Inactive')}
+            <div
+              className={`absolute top-3.5 left-3.5 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold tracking-wide ${
+                user.emailVerified
+                  ? user.isActive
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : "bg-rose-50 text-rose-800 border-rose-200"
+                  : "bg-amber-50 text-amber-800 border-amber-200"
+              }`}
+            >
+              {!user.emailVerified
+                ? "Pending"
+                : user.isActive
+                ? "Active"
+                : "Inactive"}
             </div>
 
             <Avatar className="h-20 w-20 border-4 border-slate-50 shadow-sm mb-3 mt-4">
@@ -39,7 +49,15 @@ const UsersGrid = ({ users, totalPages, currentPage, onPageChange, isLoading, on
             </Avatar>
 
             <h3 className="font-semibold text-foreground truncate w-full px-2">{user.name}</h3>
-            <p className="text-xs text-primary font-medium mb-3">{user.role}</p>
+            <span
+              className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
+                user.role === "ADMIN"
+                  ? "bg-purple/10 text-purple border-purple/20"
+                  : "bg-blue-50 text-blue-700 border-blue-200"
+              }`}
+            >
+              {user.role === "ADMIN" ? "Administrator" : "Executive"}
+            </span>
 
             <div className="w-full space-y-2 mt-2 pt-4 border-t border-border/40 text-left text-xs text-muted-foreground">
               <div className="flex items-center gap-2 truncate">

@@ -118,15 +118,34 @@ const UsersTable = ({ users, totalPages, currentPage, onPageChange, isLoading, o
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="px-6 py-4 text-muted-foreground text-sm">
+                <TableCell className="px-6 py-4 text-slate-500 text-sm">
                   {user.email}
                 </TableCell>
-                <TableCell className="px-6 py-4 text-foreground/80 font-medium text-sm">
-                  {user.role === "ADMIN" ? "Administrator" : "Executive"}
+                <TableCell className="px-6 py-4">
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                      user.role === "ADMIN"
+                        ? "bg-purple/10 text-purple border-purple/20"
+                        : "bg-blue-50 text-blue-700 border-blue-200"
+                    }`}
+                  >
+                    {user.role === "ADMIN" ? "Administrator" : "Executive"}
+                  </span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <span className={`inline-flex items-center text-xs font-semibold ${user.emailVerified ? 'text-success' : 'text-warning'}`}>
-                    {user.emailVerified ? 'Verified' : 'Not Verified'}
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                      user.emailVerified
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                        : "bg-amber-50 text-amber-800 border-amber-200"
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        user.emailVerified ? "bg-emerald-500" : "bg-amber-500"
+                      }`}
+                    />
+                    {user.emailVerified ? "Verified" : "Pending"}
                   </span>
                 </TableCell> 
                 <TableCell className="px-6 py-4 text-right pr-4">

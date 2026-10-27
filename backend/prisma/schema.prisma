@@ -279,6 +279,7 @@ model Property {
     media                       PropertyMedia[]
     units                       ProjectUnit[]
     auditLogs                   PropertyAuditLog[]
+    clearanceRequests           SellerClearanceRequest[]
 
     createdById                 String?
     createdAt                   DateTime       @default(now())
@@ -375,4 +376,54 @@ model PropertyAuditLog {
     @@index([action])
     @@index([createdAt])
 }
+
+// ==========================================
+// SELLER CLEARANCE REQUESTS (FR: Access Control)
+// ==========================================
+
+model SellerClearanceRequest {
+    id                   String       @id @default(cuid())
+    propertyId           String
+    property             Property?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    propertyTitle        String
+    dealType             DealType?
+    locality             String?
+    price                Float?
+
+    // Requester (Executive)
+    executiveId          String?
+    requestedBy          String
+    requestedByEmail     String?
+    reason               String
+    clientName           String?
+    notes                String?
+
+    // Status: "PENDING", "APPROVED", "QUERY_ASKED", "REJECTED"
+    status               String       @default("PENDING")
+    adminFeedback        String?
+    adminActionAt        DateTime?
+    adminName            String?
+
+    // Executive reply
+    executiveReply       String?
+    executiveRepliedAt   DateTime?
+
+    // Dismissal / Notification read flags
+    dismissedByExecutive Boolean      @default(false)
+    dismissedByAdmin     Boolean      @default(false)
+    dismissedAt          DateTime?
+
+    // Unlocked seller info cache
+    sellerName           String?
+    sellerPhone          String?
+
+    createdAt            DateTime     @default(now())
+    updatedAt            DateTime     @updatedAt
+
+    @@index([propertyId])
+    @@index([executiveId])
+    @@index([status])
+    @@index([createdAt])
+}
+
 

@@ -253,3 +253,65 @@ export const fetchPropertyLogs = async (propertyId) => {
   return (await res.json()).data;
 };
 
+export const submitClearanceRequest = async (propertyId, payload) => {
+  const res = await fetch(`${API_URL}/inventory/${propertyId}/clearance-request`, {
+    method: "POST",
+    credentials: "include",
+    headers: getHeaders(),
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(extractErrorMessage(error, "Failed to submit clearance request"));
+  }
+  return (await res.json()).data;
+};
+
+export const fetchClearanceRequests = async (params = {}) => {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      query.append(key, value);
+    }
+  });
+
+  const url = `${API_URL}/inventory/clearance-requests${
+    query.toString() ? `?${query.toString()}` : ""
+  }`;
+
+  const res = await fetch(url, {
+    credentials: "include",
+    headers: getHeaders(),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(extractErrorMessage(error, "Failed to fetch clearance requests"));
+  }
+  return (await res.json()).data;
+};
+
+export const fetchPropertyClearanceRequest = async (propertyId) => {
+  const res = await fetch(`${API_URL}/inventory/${propertyId}/clearance-request`, {
+    credentials: "include",
+    headers: getHeaders(),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(extractErrorMessage(error, "Failed to fetch property clearance request"));
+  }
+  return (await res.json()).data;
+};
+
+export const decideClearanceRequest = async (propertyId, payload) => {
+  const res = await fetch(`${API_URL}/inventory/${propertyId}/clearance-decide`, {
+    method: "POST",
+    credentials: "include",
+    headers: getHeaders(),
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(extractErrorMessage(error, "Failed to update clearance request"));
+  }
+  return (await res.json()).data;
+};

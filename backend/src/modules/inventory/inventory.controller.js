@@ -1,6 +1,7 @@
 import { asyncHandler } from "../../shared/asyncHandler.js";
 import { AppError } from "../../shared/AppError.js";
 import { inventoryService } from "./inventory.service.js";
+import { clearanceService } from "./clearance.service.js";
 import {
   createPropertySchema,
   updatePropertySchema,
@@ -139,4 +140,29 @@ export const uploadMedia = asyncHandler(async (req, res) => {
     message: "File uploaded successfully"
   });
 });
+
+// Clearance requests
+export const submitClearanceRequest = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await clearanceService.submitRequest(id, req.body, req.user);
+  res.status(201).json({ success: true, data, message: "Clearance request submitted" });
+});
+
+export const listClearanceRequests = asyncHandler(async (req, res) => {
+  const data = await clearanceService.listRequests(req.user, req.query);
+  res.json({ success: true, data });
+});
+
+export const getPropertyClearanceRequest = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await clearanceService.getRequestByPropertyId(id, req.user);
+  res.json({ success: true, data });
+});
+
+export const decideClearanceRequest = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await clearanceService.decideRequest(id, req.body, req.user);
+  res.json({ success: true, data, message: "Clearance request updated" });
+});
+
 

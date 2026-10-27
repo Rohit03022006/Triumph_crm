@@ -24,6 +24,7 @@ import {
   Settings,
   CheckCircle,
   Logs as LogsIcon,
+  ShieldCheck,
 } from "lucide-react";
 
 const getNavItems = (role) => {
@@ -92,6 +93,11 @@ const getNavItems = (role) => {
       icon: Building,
     },
     {
+      title: "My Requests",
+      url: `${prefix}/requests`,
+      icon: ShieldCheck,
+    },
+    {
       title: "Reports",
       url: `${prefix}/reports`,
       icon: BarChart3,
@@ -149,15 +155,16 @@ export function AppSidebar({ role = "EXECUTIVE" }) {
                       isActive={isActive}
                       tooltip={item.title}
                       className="
-                        h-12
+                        h-11
                         w-full
-                        rounded-md
+                        rounded-lg
                         px-3
-                        text-xl
+                        text-sm
                         font-semibold
+                        transition-all
 
-                        group-data-[collapsible=icon]:!size-12
-                        group-data-[collapsible=icon]:!min-h-12
+                        group-data-[collapsible=icon]:!size-11
+                        group-data-[collapsible=icon]:!min-h-11
                         group-data-[collapsible=icon]:!p-0
 
                         group-data-[collapsible=icon]:[&>a]:!flex
@@ -166,7 +173,7 @@ export function AppSidebar({ role = "EXECUTIVE" }) {
                         group-data-[collapsible=icon]:[&>a]:!items-center
                         group-data-[collapsible=icon]:[&>a]:!justify-center
 
-                        [&_svg]:!size-6
+                        [&_svg]:!size-5
                         [&_svg]:shrink-0
                       "
                     >
@@ -185,10 +192,10 @@ export function AppSidebar({ role = "EXECUTIVE" }) {
                         "
                       >
                         {/* Navigation Icon */}
-                        <Icon className="!size-6 shrink-0" />
+                        <Icon className="!size-5 shrink-0" />
 
                         {/* Navigation Label */}
-                        <span className="truncate text-xl font-semibold group-data-[collapsible=icon]:hidden">
+                        <span className="truncate text-sm font-semibold tracking-normal group-data-[collapsible=icon]:hidden">
                           {item.title}
                         </span>
                       </Link>

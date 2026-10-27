@@ -203,8 +203,8 @@ const Inventory = () => {
       {/* Stats Cards matching /users */}
       <InventoryStats stats={metrics} />
 
-      {/* Main Table / Grid Area matching /users */}
-      <div className="w-full max-w-full min-w-0 bg-white border rounded-xl shadow-sm overflow-hidden">
+      {/* Main Table / Grid Area */}
+      <div className="w-full max-w-full min-w-0 bg-white border border-border/70 rounded-xl shadow-xs overflow-hidden">
         {/* Filters Bar */}
         <InventoryFilters
           search={search}

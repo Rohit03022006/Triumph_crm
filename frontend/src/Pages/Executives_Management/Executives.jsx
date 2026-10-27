@@ -251,7 +251,7 @@ const Executives = () => {
       <ExecutivesStats stats={stats} />
 
       {/* Main Table Area */}
-      <div className="w-full max-w-full min-w-0 bg-white border rounded-xl shadow-sm overflow-hidden">
+      <div className="w-full max-w-full min-w-0 bg-white border border-border/70 rounded-xl shadow-xs overflow-hidden">
         {/* Filters Bar */}
         {selectedIds.length > 0 && (
           <div className="bg-danger/5 border-b border-danger/10 px-6 py-3 flex items-center justify-between">

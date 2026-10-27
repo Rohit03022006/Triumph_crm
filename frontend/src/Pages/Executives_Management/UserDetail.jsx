@@ -116,23 +116,59 @@ const UserDetail = () => {
   if (!user) return <div className="p-8 text-center text-danger">User not found</div>;
 
   return (
-    <div className="w-full max-w-full min-w-0 bg-background min-h-screen rounded-2xl space-y-6 overflow-x-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full max-w-full min-w-0 bg-background min-h-screen rounded-2xl space-y-6 pb-16 overflow-x-hidden">
+      {/* Header & Breadcrumb */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-2 border-b border-border/70">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" onClick={() => navigate(-1)} className="rounded-full shadow-sm">
-            <ArrowLeft className="w-4 h-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigate('/admin/users')}
+            className="rounded-full shadow-2xs h-10 w-10 border-slate-200 shrink-0"
+            title="Back to Staff List"
+          >
+            <ArrowLeft className="w-4 h-4 text-slate-700" />
           </Button>
           <div>
-            <h2 className="text-2xl font-heading font-bold text-foreground">Staff Profile</h2>
-            <div className="text-sm text-muted-foreground flex items-center gap-2">
-              <span className="cursor-pointer hover:text-foreground" onClick={() => navigate('/admin/users')}>Users</span>
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              <span
+                className="cursor-pointer hover:text-slate-900 transition-colors"
+                onClick={() => navigate('/admin')}
+              >
+                Dashboard
+              </span>
               <span>›</span>
-              <span className="font-medium text-foreground">{user.name}</span>
+              <span
+                className="cursor-pointer hover:text-slate-900 transition-colors"
+                onClick={() => navigate('/admin/users')}
+              >
+                Staff Management
+              </span>
+              <span>›</span>
+              <span className="font-bold text-slate-800">{user.name}</span>
             </div>
+
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+                {user.name}
+              </h1>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                  user.role === "ADMIN"
+                    ? "bg-purple/10 text-purple border-purple/20"
+                    : "bg-blue-50 text-blue-700 border-blue-200"
+                }`}
+              >
+                {user.role === "ADMIN" ? "Administrator" : "Executive"}
+              </span>
+            </div>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Profile details, verification status, contact details, and account permissions.
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
           <Button
             variant="outline"
             onClick={() => {
@@ -141,12 +177,17 @@ const UserDetail = () => {
               setNewPassword('');
               setIsPasswordDialogOpen(true);
             }}
-            className="border-border text-foreground hover:bg-muted"
+            className="border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
           >
-            <Lock className="w-4 h-4 mr-2" /> Change Password
+            <Lock className="w-4 h-4 text-slate-500" />
+            <span>Change Password</span>
           </Button>
-          <Button onClick={handleEditClick} className="bg-primary hover:bg-brand-dark text-primary-foreground">
-            <Edit className="w-4 h-4 mr-2" /> Edit Profile
+          <Button
+            onClick={handleEditClick}
+            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-1.5"
+          >
+            <Edit className="w-4 h-4" />
+            <span>Edit Profile</span>
           </Button>
         </div>
       </div>
@@ -155,35 +196,43 @@ const UserDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Left Column: Profile Card */}
-        <div className="col-span-1 bg-white border border-border/40 rounded-xl shadow-sm p-6 flex flex-col items-center text-center">
-          <Avatar className="h-32 w-32 border-4 border-white shadow-lg mb-4">
+        <div className="col-span-1 bg-white border border-border/70 rounded-xl shadow-xs p-6 flex flex-col items-center text-center">
+          <Avatar className="h-28 w-28 border-4 border-slate-50 shadow-md mb-4">
             {user.image && <AvatarImage src={user.image} alt={user.name} className="object-cover" />}
-            <AvatarFallback className="bg-muted text-muted-foreground text-4xl font-bold">
+            <AvatarFallback className="bg-slate-100 text-slate-600 text-3xl font-bold">
               {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
-          <h3 className="text-xl font-bold text-foreground">{user.name}</h3>
-          <p className="text-sm text-primary font-medium mt-1 uppercase tracking-wider">{user.role}</p>
+          <h3 className="text-xl font-bold text-slate-900 font-heading">{user.name}</h3>
+          <p className="text-xs text-primary font-bold mt-1 uppercase tracking-wider">{user.role}</p>
           
-          <div className={`mt-4 px-3 py-1 rounded-full border text-xs font-semibold ${user.emailVerified ? (user.isActive ? 'border-success/30 bg-success/10 text-success' : 'border-danger/30 bg-danger/10 text-danger') : 'border-warning/30 bg-warning/10 text-warning'}`}>
-            {!user.emailVerified ? 'Pending' : (user.isActive ? 'Active' : 'Inactive')}
+          <div
+            className={`mt-3 px-2.5 py-0.5 rounded-full border text-xs font-semibold tracking-wide ${
+              user.emailVerified
+                ? user.isActive
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : 'bg-rose-50 text-rose-800 border-rose-200'
+                : 'bg-amber-50 text-amber-800 border-amber-200'
+            }`}
+          >
+            {!user.emailVerified ? 'Pending Verification' : (user.isActive ? 'Active Staff' : 'Inactive')}
           </div>
 
-          <div className="w-full mt-6 pt-6 border-t border-border/40 space-y-4 text-left">
-            <div className="flex items-center gap-3 text-muted-foreground text-sm">
-              <Mail className="w-4 h-4" />
-              <span>{user.email}</span>
+          <div className="w-full mt-6 pt-6 border-t border-slate-100 space-y-3.5 text-left">
+            <div className="flex items-center gap-3 text-slate-600 text-sm">
+              <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="truncate">{user.email}</span>
             </div>
-            <div className="flex items-center gap-3 text-muted-foreground text-sm">
-              <Phone className="w-4 h-4" />
+            <div className="flex items-center gap-3 text-slate-600 text-sm">
+              <Phone className="w-4 h-4 text-slate-400 shrink-0" />
               <span>{user.phone || 'Phone not provided'}</span>
             </div>
-            <div className="flex items-center gap-3 text-muted-foreground text-sm">
-              <MapPin className="w-4 h-4" />
+            <div className="flex items-center gap-3 text-slate-600 text-sm">
+              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
               <span>{user.address || 'Address not provided'}</span>
             </div>
-            <div className="flex items-center gap-3 text-muted-foreground text-sm">
-              <Briefcase className="w-4 h-4" />
+            <div className="flex items-center gap-3 text-slate-600 text-sm">
+              <Briefcase className="w-4 h-4 text-slate-400 shrink-0" />
               <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
@@ -191,30 +240,43 @@ const UserDetail = () => {
 
         {/* Right Column: Work/Activity */}
         <div className="col-span-1 md:col-span-2 space-y-6">
-                    <div className="bg-white border border-border/40 rounded-xl shadow-sm p-6 mb-6">
-            <h4 className="text-lg font-bold text-foreground mb-4">Professional Information</h4>
-            <div className="grid grid-cols-2 gap-4">
-
-
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Verification Status</p>
-                <p className={`font-medium ${user.emailVerified ? 'text-success' : 'text-warning'}`}>
-                  {user.emailVerified ? 'Verified' : 'Not Verified (Pending)'}
-                </p>
+          <div className="bg-white border border-border/70 rounded-xl shadow-xs p-6">
+            <h4 className="text-base font-bold text-slate-900 font-heading mb-4">Professional Information</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-100">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Verification Status</p>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                    user.emailVerified
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-amber-50 text-amber-800 border-amber-200'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${user.emailVerified ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                  {user.emailVerified ? 'Verified' : 'Pending Approval'}
+                </span>
               </div>
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Account Status</p>
-                <p className={`font-medium ${user.isActive ? 'text-success' : 'text-danger'}`}>
+              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-100">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Account Status</p>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                    user.isActive
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-rose-50 text-rose-800 border-rose-200'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                   {user.isActive ? 'Active' : 'Inactive'}
-                </p>
+                </span>
               </div>
             </div>
           </div>
-          <div className="bg-white border border-border/40 rounded-xl shadow-sm p-6">
-            <h4 className="text-lg font-bold text-foreground mb-4">Work & Activity</h4>
-            <div className="flex flex-col items-center justify-center h-48 bg-muted/20 rounded-lg border border-dashed border-border/60">
-              <p className="text-muted-foreground text-sm">No activity recorded yet.</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Leads and tasks assigned to this executive will appear here.</p>
+
+          <div className="bg-white border border-border/70 rounded-xl shadow-xs p-6">
+            <h4 className="text-base font-bold text-slate-900 font-heading mb-4">Work & Activity</h4>
+            <div className="flex flex-col items-center justify-center py-12 px-4 bg-slate-50/60 rounded-lg border border-dashed border-border/70 text-center">
+              <p className="text-slate-700 text-sm font-semibold">No activity recorded yet</p>
+              <p className="text-xs text-slate-500 mt-1 max-w-sm">Leads, site visits, and properties assigned to this executive will appear here automatically.</p>
             </div>
           </div>
         </div>

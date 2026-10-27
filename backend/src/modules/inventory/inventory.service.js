@@ -341,6 +341,23 @@ export const inventoryService = {
       }
     }
 
+    // Protect seller info for non-admins: prevent accidental overwrite with masked placeholder or unauthorized edits
+    if (user?.role !== "ADMIN") {
+      if (payload.sellerName === "Hidden (Admin Only)" || payload.sellerName === undefined) {
+        delete payload.sellerName;
+      }
+      if (payload.sellerPhone === "Hidden (Admin Only)" || payload.sellerPhone === undefined) {
+        delete payload.sellerPhone;
+      }
+      // If property already has seller info, non-admin cannot alter it
+      if (existing.sellerName && payload.sellerName && payload.sellerName !== existing.sellerName) {
+        delete payload.sellerName;
+      }
+      if (existing.sellerPhone && payload.sellerPhone && payload.sellerPhone !== existing.sellerPhone) {
+        delete payload.sellerPhone;
+      }
+    }
+
     const updated = await propertyRepository.update(id, payload);
     await invalidateInventoryCache(id);
 

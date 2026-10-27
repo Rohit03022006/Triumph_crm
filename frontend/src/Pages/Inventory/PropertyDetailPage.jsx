@@ -1,7 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft,
   Building2,
@@ -31,6 +42,11 @@ import {
   XCircle,
   AlertTriangle,
   ShieldAlert,
+  Send,
+  Check,
+  HelpCircle,
+  MessageSquare,
+  X,
 } from "lucide-react";
 import {
   fetchPropertyById,
@@ -38,6 +54,9 @@ import {
   approveProperty,
   rejectProperty,
   fetchInventoryMasterData,
+  submitClearanceRequest,
+  fetchPropertyClearanceRequest,
+  decideClearanceRequest,
 } from "@/api/inventory";
 import { fetchPropertyLogs } from "@/api/logs";
 import { toast } from "@/components/ui/toast";
@@ -74,8 +93,159 @@ const PropertyDetailPage = () => {
   const { data: user } = useQuery({
     queryKey: ["me"],
     queryFn: fetchMe,
+    staleTime: 30000,
   });
   const isAdmin = user?.role === "ADMIN";
+
+  // Seller info clearance query from backend
+  const { data: clearanceRequest } = useQuery({
+    queryKey: ["propertyClearance", id],
+    queryFn: () => fetchPropertyClearanceRequest(id),
+    enabled: Boolean(id),
+    refetchInterval: 5000,
+  });
+
+  // Seller info clearance states
+  const [isRequestSellerOpen, setIsRequestSellerOpen] = useState(false);
+  const [requestReason, setRequestReason] = useState("Client Site Visit Scheduled");
+  const [requestClientName, setRequestClientName] = useState("");
+  const [requestNotes, setRequestNotes] = useState("");
+  const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
+
+  // Executive Reply & Admin Action states
+  const [executiveReplyText, setExecutiveReplyText] = useState("");
+  const [isExecutiveReplying, setIsExecutiveReplying] = useState(false);
+  const [isAdminQueryModalOpen, setIsAdminQueryModalOpen] = useState(false);
+  const [isAdminRejectModalOpen, setIsAdminRejectModalOpen] = useState(false);
+  const [adminQueryText, setAdminQueryText] = useState("");
+  const [adminRejectText, setAdminRejectText] = useState("");
+
+  const handleRequestSellerSubmit = async (e) => {
+    e.preventDefault();
+    if (!requestReason.trim()) {
+      toast.warning("Clearance Reason Required", "Please select or enter a reason for the clearance request.");
+      return;
+    }
+    setIsSubmittingRequest(true);
+    try {
+      await submitClearanceRequest(id, {
+        propertyTitle: property?.title || "Property Listing",
+        reason: requestReason,
+        clientName: requestClientName.trim() || undefined,
+        notes: requestNotes.trim() || undefined,
+      });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      setIsRequestSellerOpen(false);
+      setRequestClientName("");
+      setRequestNotes("");
+      toast.success(
+        "Clearance Requested",
+        "Your request for seller details has been sent to Administrator for clearance.",
+      );
+    } catch (err) {
+      toast.error("Failed to submit request", err.message);
+    } finally {
+      setIsSubmittingRequest(false);
+    }
+  };
+
+  const handleGrantClearance = async () => {
+    try {
+      await decideClearanceRequest(id, { action: "APPROVE" });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      toast.success(
+        "Clearance Granted",
+        `Executive ${clearanceRequest?.requestedBy || "Executive"} has been authorized to access seller info.`,
+      );
+    } catch (e) {
+      toast.error("Failed to grant clearance", e.message);
+    }
+  };
+
+  const handleAskQuerySubmit = async (e) => {
+    e.preventDefault();
+    if (!adminQueryText.trim()) {
+      toast.warning("Query Required", "Please enter the query / clarification needed.");
+      return;
+    }
+    try {
+      await decideClearanceRequest(id, {
+        action: "QUERY",
+        feedback: adminQueryText.trim(),
+      });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      setIsAdminQueryModalOpen(false);
+      setAdminQueryText("");
+      toast.success("Query Sent", `Clarification query sent to ${clearanceRequest?.requestedBy || "Executive"}.`);
+    } catch (err) {
+      toast.error("Failed to send query", err.message);
+    }
+  };
+
+  const handleRejectRequestSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await decideClearanceRequest(id, {
+        action: "REJECT",
+        feedback: adminRejectText.trim() || "Clearance declined by Administrator.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      setIsAdminRejectModalOpen(false);
+      setAdminRejectText("");
+      toast.info("Request Rejected", "Clearance request has been declined.");
+    } catch (err) {
+      toast.error("Failed to reject request", err.message);
+    }
+  };
+
+  const handleExecutiveReplySubmit = async (e) => {
+    e.preventDefault();
+    if (!executiveReplyText.trim()) {
+      toast.warning("Reply Required", "Please provide your reply to the administrator's query.");
+      return;
+    }
+    setIsExecutiveReplying(true);
+    try {
+      await decideClearanceRequest(id, {
+        action: "REPLY",
+        reply: executiveReplyText.trim(),
+      });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      setExecutiveReplyText("");
+      toast.success("Response Sent", "Your response has been submitted to the Administrator for review.");
+    } catch (err) {
+      toast.error("Failed to send response", err.message);
+    } finally {
+      setIsExecutiveReplying(false);
+    }
+  };
+
+  const handleDismissRequest = async () => {
+    try {
+      await decideClearanceRequest(id, { action: "DISMISS" });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      toast.info("Request Dismissed", "Clearance request has been removed.");
+    } catch (e) {
+      toast.error("Failed to dismiss request", e.message);
+    }
+  };
+
+  const handleRevokeClearance = async () => {
+    try {
+      await decideClearanceRequest(id, { action: "REVOKE" });
+      queryClient.invalidateQueries({ queryKey: ["propertyClearance", id] });
+      queryClient.invalidateQueries({ queryKey: ["clearanceRequests"] });
+      toast.info("Clearance Revoked", "Seller details are masked again for executives.");
+    } catch (e) {
+      toast.error("Failed to revoke clearance", e.message);
+    }
+  };
 
   // Master data for unit management
   const { data: masterData } = useQuery({
@@ -223,7 +393,7 @@ const PropertyDetailPage = () => {
   return (
     <div className="w-full max-w-full min-w-0 space-y-7 pb-16 overflow-x-hidden">
       {/* Top Header & Breadcrumb */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-2 border-b border-border/70">
         <div className="flex items-center gap-4">
           <Button
             variant="outline"
@@ -236,7 +406,7 @@ const PropertyDetailPage = () => {
           </Button>
 
           <div>
-            <div className="text-sm text-slate-500 flex items-center gap-2 mb-1.5 font-medium">
+            <div className="text-xs font-semibold text-slate-500 flex items-center gap-2 uppercase tracking-wider mb-1">
               <span
                 onClick={handleBack}
                 className="cursor-pointer hover:text-slate-900 transition-colors"
@@ -251,7 +421,7 @@ const PropertyDetailPage = () => {
                 Inventory
               </span>
               <span>›</span>
-              <span className="font-semibold text-slate-800 line-clamp-1 max-w-[320px]">
+              <span className="font-bold text-slate-800 line-clamp-1 max-w-[320px]">
                 {property.title}
               </span>
             </div>
@@ -1198,30 +1368,379 @@ const PropertyDetailPage = () => {
                 </div>
 
                 {isAdmin ? (
-                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2">
-                    <p className="font-bold text-slate-900 text-base">
-                      {property.sellerName || "Unspecified Seller"}
-                    </p>
-                    {property.sellerPhone && (
-                      <a
-                        href={`tel:${property.sellerPhone}`}
-                        className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline pt-1 text-sm"
+                  <div className="space-y-3">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="font-bold text-slate-900 text-base">
+                          {property.sellerName || "Unspecified Seller"}
+                        </p>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          <ShieldCheck className="w-3.5 h-3.5" /> Full Admin Access
+                        </span>
+                      </div>
+                      {property.sellerPhone ? (
+                        <a
+                          href={`tel:${property.sellerPhone}`}
+                          className="inline-flex items-center gap-2 text-primary font-semibold hover:underline pt-1 text-sm"
+                        >
+                          <Phone className="w-4 h-4" />
+                          {property.sellerPhone}
+                        </a>
+                      ) : (
+                        <p className="text-xs text-slate-500 italic">No phone number recorded</p>
+                      )}
+                    </div>
+
+                    {/* Admin Clearance Requests Banner */}
+                    {clearanceRequest && (
+                      <div
+                        className={`p-3.5 rounded-xl border text-xs space-y-2.5 ${
+                          clearanceRequest.status === "APPROVED"
+                            ? "bg-emerald-50/70 border-emerald-200 text-emerald-900"
+                            : clearanceRequest.status === "QUERY_ASKED"
+                            ? "bg-blue-50/80 border-blue-200 text-blue-900"
+                            : clearanceRequest.status === "REJECTED"
+                            ? "bg-rose-50/80 border-rose-200 text-rose-900"
+                            : "bg-amber-50/80 border-amber-200 text-amber-900"
+                        }`}
                       >
-                        <Phone className="w-4 h-4" />
-                        {property.sellerPhone}
-                      </a>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 font-bold">
+                            {clearanceRequest.status === "APPROVED" ? (
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                            ) : clearanceRequest.status === "QUERY_ASKED" ? (
+                              <HelpCircle className="w-4 h-4 text-blue-600" />
+                            ) : clearanceRequest.status === "REJECTED" ? (
+                              <XCircle className="w-4 h-4 text-rose-600" />
+                            ) : (
+                              <AlertTriangle className="w-4 h-4 text-amber-600" />
+                            )}
+                            <span>
+                              {clearanceRequest.status === "APPROVED"
+                                ? `Clearance Granted for ${clearanceRequest.requestedBy}`
+                                : clearanceRequest.status === "QUERY_ASKED"
+                                ? `Query Sent to ${clearanceRequest.requestedBy}`
+                                : clearanceRequest.status === "REJECTED"
+                                ? `Clearance Declined for ${clearanceRequest.requestedBy}`
+                                : `Clearance Requested by ${clearanceRequest.requestedBy}`}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-slate-500 font-medium">
+                            {new Date(clearanceRequest.requestedAt).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+
+                        <div className="text-[11px] bg-white/70 p-2.5 rounded-lg border border-border/40 space-y-1 text-slate-700">
+                          <div>
+                            <span className="text-slate-500 font-medium">Reason: </span>
+                            <span className="font-semibold text-slate-900">
+                              {clearanceRequest.reason}
+                            </span>
+                          </div>
+                          {clearanceRequest.clientName && (
+                            <div>
+                              <span className="text-slate-500 font-medium">Client: </span>
+                              <span className="font-semibold text-slate-900">
+                                {clearanceRequest.clientName}
+                              </span>
+                            </div>
+                          )}
+                          {clearanceRequest.notes && (
+                            <div>
+                              <span className="text-slate-500 font-medium">Notes: </span>
+                              <span className="italic text-slate-700">
+                                "{clearanceRequest.notes}"
+                              </span>
+                            </div>
+                          )}
+                          {clearanceRequest.adminFeedback && clearanceRequest.status === "QUERY_ASKED" && (
+                            <div className="mt-1 pt-1 border-t border-slate-200 text-blue-800">
+                              <span className="font-semibold text-[10px] block text-blue-700">Admin Query:</span>
+                              <span className="italic">"{clearanceRequest.adminFeedback}"</span>
+                            </div>
+                          )}
+                          {clearanceRequest.adminFeedback && clearanceRequest.status === "REJECTED" && (
+                            <div className="mt-1 pt-1 border-t border-slate-200 text-rose-800">
+                              <span className="font-semibold text-[10px] block text-rose-700">Rejection Reason:</span>
+                              <span>{clearanceRequest.adminFeedback}</span>
+                            </div>
+                          )}
+                          {clearanceRequest.executiveReply && (
+                            <div className="mt-1 pt-1 border-t border-slate-200 text-emerald-800 bg-emerald-50/70 p-1.5 rounded">
+                              <span className="font-bold text-[10px] block text-emerald-700">Executive Reply:</span>
+                              <span>{clearanceRequest.executiveReply}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-0.5 flex-wrap">
+                          {clearanceRequest.status !== "APPROVED" ? (
+                            <>
+                              <Button
+                                type="button"
+                                size="sm"
+                                onClick={handleGrantClearance}
+                                className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium cursor-pointer"
+                              >
+                                <Check className="w-3.5 h-3.5 mr-1" /> Grant Clearance
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setAdminQueryText("");
+                                  setIsAdminQueryModalOpen(true);
+                                }}
+                                className="h-7 text-xs text-amber-700 border-amber-300 hover:bg-amber-50 cursor-pointer font-medium"
+                              >
+                                <HelpCircle className="w-3.5 h-3.5 mr-1" /> Ask Query
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setAdminRejectText("");
+                                  setIsAdminRejectModalOpen(true);
+                                }}
+                                className="h-7 text-xs text-rose-700 border-rose-300 hover:bg-rose-50 cursor-pointer font-medium"
+                              >
+                                <X className="w-3.5 h-3.5 mr-1" /> Reject
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleDismissRequest}
+                                className="h-7 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
+                              >
+                                Dismiss
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={handleRevokeClearance}
+                              className="h-7 text-xs text-amber-700 border-amber-300 hover:bg-amber-100 cursor-pointer"
+                            >
+                              Revoke Clearance
+                            </Button>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
+                ) : clearanceRequest?.status === "APPROVED" ? (
+                  <div className="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 text-emerald-950 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        Clearance Granted by Admin
+                      </span>
+                      <span className="text-[10px] bg-emerald-200/60 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">
+                        Authorized
+                      </span>
+                    </div>
+                    <div className="bg-white/80 p-3 rounded-lg border border-emerald-200/80 space-y-1.5">
+                      <p className="text-xs text-slate-500 font-medium">Seller / Owner:</p>
+                      <p className="font-bold text-slate-900 text-base">
+                        {clearanceRequest.sellerName || property.sellerName || "Direct Seller"}
+                      </p>
+                      {(clearanceRequest.sellerContact ||
+                        (property.sellerPhone &&
+                          property.sellerPhone !== "Hidden (Admin Only)")) && (
+                        <a
+                          href={`tel:${clearanceRequest.sellerContact || property.sellerPhone}`}
+                          className="inline-flex items-center gap-2 text-primary font-semibold hover:underline pt-1 text-sm"
+                        >
+                          <Phone className="w-4 h-4" />
+                          {clearanceRequest.sellerContact || property.sellerPhone}
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-emerald-700">
+                      Clearance active for client site visit and negotiation.
+                    </p>
+                  </div>
+                ) : clearanceRequest?.status === "QUERY_ASKED" ? (
+                  /* Executive View: Admin asked a Query */
+                  <div className="bg-amber-50/90 p-4 rounded-xl border border-amber-200 text-amber-950 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-amber-900">
+                        <MessageSquare className="w-4 h-4 text-amber-600" />
+                        Action Required: Administrator Query
+                      </span>
+                      <span className="text-[10px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">
+                        Clarification Needed
+                      </span>
+                    </div>
+
+                    <div className="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                      <span className="text-[11px] font-semibold text-slate-500">
+                        Administrator question:
+                      </span>
+                      <p className="text-xs text-slate-900 font-medium whitespace-pre-wrap">
+                        "{clearanceRequest.adminFeedback}"
+                      </p>
+                      <span className="text-[10px] text-slate-400 block pt-0.5">
+                        Asked by {clearanceRequest.adminName || "Admin"} •{" "}
+                        {new Date(
+                          clearanceRequest.adminActionAt || clearanceRequest.requestedAt
+                        ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+
+                    <form onSubmit={handleExecutiveReplySubmit} className="space-y-2 pt-1">
+                      <Label className="text-xs font-semibold text-slate-700">
+                        Your Response to Administrator:
+                      </Label>
+                      <Textarea
+                        rows={2}
+                        required
+                        value={executiveReplyText}
+                        onChange={(e) => setExecutiveReplyText(e.target.value)}
+                        placeholder="Provide details, budget confirmation, or schedule..."
+                        className="text-xs resize-none bg-white"
+                      />
+                      <Button
+                        type="submit"
+                        size="sm"
+                        disabled={isExecutiveReplying}
+                        className="w-full h-8 text-xs bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer"
+                      >
+                        <Send className="w-3.5 h-3.5 mr-1.5" />
+                        {isExecutiveReplying ? "Submitting..." : "Send Reply to Administrator"}
+                      </Button>
+                    </form>
+                  </div>
+                ) : clearanceRequest?.status === "REJECTED" ? (
+                  /* Executive View: Admin Declined */
+                  <div className="bg-rose-50/90 p-4 rounded-xl border border-rose-200 text-rose-950 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-rose-800">
+                        <XCircle className="w-4 h-4 text-rose-600" />
+                        Clearance Request Declined
+                      </span>
+                      <span className="text-[10px] bg-rose-200 text-rose-800 font-bold px-2 py-0.5 rounded-full">
+                        Declined
+                      </span>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg border border-rose-200 text-xs text-slate-700 space-y-1">
+                      <span className="text-[11px] font-semibold text-slate-500">
+                        Administrator feedback:
+                      </span>
+                      <p className="italic text-slate-900">"{clearanceRequest.adminFeedback}"</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setClearanceRequest(null);
+                        setIsRequestSellerOpen(true);
+                      }}
+                      className="w-full h-8 text-xs text-rose-800 border-rose-300 hover:bg-rose-100 cursor-pointer"
+                    >
+                      Submit New Clearance Request
+                    </Button>
+                  </div>
+                ) : clearanceRequest?.status === "PENDING" ? (
+                  <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 text-amber-950 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-amber-800">
+                        <Clock className="w-4 h-4 text-amber-600" />
+                        Clearance Request Pending
+                      </span>
+                      <span className="text-[10px] bg-amber-200/60 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-300">
+                        Under Admin Review
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-normal">
+                      Your request was submitted on{" "}
+                      <span className="font-semibold text-slate-800">
+                        {new Date(clearanceRequest.requestedAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      .
+                    </p>
+                    <div className="text-[11px] bg-white/70 p-2.5 rounded-lg border border-amber-200/60 space-y-1 text-slate-700">
+                      <div>
+                        <span className="text-slate-500 font-medium">Reason: </span>
+                        <span className="font-semibold text-slate-900">
+                          {clearanceRequest.reason}
+                        </span>
+                      </div>
+                      {clearanceRequest.clientName && (
+                        <div>
+                          <span className="text-slate-500 font-medium">Client: </span>
+                          <span className="font-semibold text-slate-900">
+                            {clearanceRequest.clientName}
+                          </span>
+                        </div>
+                      )}
+                      {clearanceRequest.notes && (
+                        <div>
+                          <span className="text-slate-500 font-medium">Notes: </span>
+                          <span className="italic text-slate-700">
+                            "{clearanceRequest.notes}"
+                          </span>
+                        </div>
+                      )}
+                      {clearanceRequest.executiveReply && (
+                        <div className="mt-1 pt-1 border-t border-amber-200 text-emerald-800">
+                          <span className="font-bold text-[10px] block text-emerald-700">
+                            Your Latest Reply:
+                          </span>
+                          <span className="text-slate-800">{clearanceRequest.executiveReply}</span>
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsRequestSellerOpen(true)}
+                      className="w-full h-8 text-xs text-amber-800 border-amber-300 hover:bg-amber-100 cursor-pointer"
+                    >
+                      Update Clearance Request
+                    </Button>
+                  </div>
                 ) : (
-                  <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-200 text-amber-900 space-y-1.5">
-                    <p className="font-bold text-sm flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-amber-600" /> Confidential
-                      Seller Information
+                  /* Initial Executive View - Request Seller Info Button */
+                  <div className="bg-gradient-to-br from-amber-50/80 via-white to-amber-50/30 p-4 rounded-xl border border-amber-200/80 space-y-3 shadow-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2 text-amber-900 font-semibold text-sm">
+                        <div className="p-1.5 bg-amber-100 rounded-lg text-amber-700">
+                          <ShieldAlert className="w-4 h-4" />
+                        </div>
+                        <span>Confidential Seller Info</span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Seller contact details are restricted to Administrator oversight. If you have an active client ready to inspect this property or negotiate terms, submit a clearance request.
                     </p>
-                    <p className="text-xs text-amber-700 leading-normal">
-                      Seller contact details are masked for Executive accounts.
-                      Contact your administrator for seller clearance.
-                    </p>
+
+                    <Button
+                      type="button"
+                      onClick={() => setIsRequestSellerOpen(true)}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs h-9 shadow-xs gap-2 transition-colors cursor-pointer"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      Request Seller Info
+                    </Button>
                   </div>
                 )}
               </div>
@@ -1256,6 +1775,202 @@ const PropertyDetailPage = () => {
           isPending={rejectMut.isPending}
         />
       )}
+
+      {/* Request Seller Info Clearance Dialog */}
+      <Dialog open={isRequestSellerOpen} onOpenChange={setIsRequestSellerOpen}>
+        <DialogContent className="sm:max-w-lg p-6 bg-white rounded-xl shadow-lg border">
+          <DialogHeader className="space-y-1.5">
+            <div className="flex items-center gap-2 text-amber-700">
+              <div className="p-2 bg-amber-100 rounded-lg">
+                <ShieldAlert className="w-5 h-5 text-amber-600" />
+              </div>
+              <DialogTitle className="text-lg font-bold text-slate-900">
+                Request Seller Info Clearance
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-xs text-slate-500">
+              Submit a formal clearance request to access seller/landlord contact information for{" "}
+              <strong className="text-slate-700 font-semibold">{property?.title}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleRequestSellerSubmit} className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700">
+                Clearance Reason <span className="text-destructive">*</span>
+              </Label>
+              <select
+                value={requestReason}
+                onChange={(e) => setRequestReason(e.target.value)}
+                className="w-full h-10 px-3 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                required
+              >
+                <option value="Client Site Visit Scheduled">Client Site Visit Scheduled</option>
+                <option value="Buyer Ready for Direct Negotiation">Buyer Ready for Direct Negotiation</option>
+                <option value="Document & Title Deed Verification">Document & Title Deed Verification</option>
+                <option value="Pricing / Payment Term Clarification">Pricing / Payment Term Clarification</option>
+                <option value="Urgent Landlord Query on Lease Terms">Urgent Landlord Query on Lease Terms</option>
+                <option value="Other Business Justification">Other Business Justification</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700">
+                Prospective Client / Lead Name <span className="text-slate-400 font-normal">(Optional)</span>
+              </Label>
+              <Input
+                placeholder="e.g. Vikram Kapoor"
+                value={requestClientName}
+                onChange={(e) => setRequestClientName(e.target.value)}
+                className="h-10 text-sm"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700">
+                Additional Notes / Context <span className="text-slate-400 font-normal">(Optional)</span>
+              </Label>
+              <Textarea
+                rows={3}
+                placeholder="Explain the client requirement or urgency for the administrator..."
+                value={requestNotes}
+                onChange={(e) => setRequestNotes(e.target.value)}
+                className="text-sm resize-none"
+              />
+            </div>
+
+            <DialogFooter className="pt-2 flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsRequestSellerOpen(false)}
+                className="cursor-pointer"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={isSubmittingRequest}
+                className="bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                {isSubmittingRequest ? "Submitting..." : "Submit Request"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Admin Ask Query Dialog */}
+      <Dialog open={isAdminQueryModalOpen} onOpenChange={setIsAdminQueryModalOpen}>
+        <DialogContent className="sm:max-w-md p-6 bg-white rounded-xl shadow-xl border">
+          <DialogHeader className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-amber-100 rounded-lg text-amber-700">
+                <MessageSquare className="w-5 h-5 text-amber-600" />
+              </div>
+              <DialogTitle className="text-base font-bold text-slate-900">
+                Ask Clarification Query
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-xs text-slate-500">
+              Send a query to <strong className="text-slate-700">{clearanceRequest?.requestedBy}</strong> regarding this clearance request.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleAskQuerySubmit} className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700">
+                Question / Query for Executive <span className="text-destructive">*</span>
+              </Label>
+              <Textarea
+                rows={3}
+                required
+                value={adminQueryText}
+                onChange={(e) => setAdminQueryText(e.target.value)}
+                placeholder="e.g. Please confirm if the client has visited similar projects, or what is their exact budget?"
+                className="text-sm resize-none"
+              />
+            </div>
+
+            <DialogFooter className="pt-2 flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAdminQueryModalOpen(false)}
+                className="cursor-pointer"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                Send Query
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Admin Reject Clearance Dialog */}
+      <Dialog open={isAdminRejectModalOpen} onOpenChange={setIsAdminRejectModalOpen}>
+        <DialogContent className="sm:max-w-md p-6 bg-white rounded-xl shadow-xl border">
+          <DialogHeader className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-rose-100 rounded-lg text-rose-700">
+                <X className="w-5 h-5 text-rose-600" />
+              </div>
+              <DialogTitle className="text-base font-bold text-slate-900">
+                Decline Clearance Request
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-xs text-slate-500">
+              Decline seller info clearance for <strong className="text-slate-700">{clearanceRequest?.requestedBy}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleRejectRequestSubmit} className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700">
+                Rejection Reason / Guidance
+              </Label>
+              <Textarea
+                rows={3}
+                value={adminRejectText}
+                onChange={(e) => setAdminRejectText(e.target.value)}
+                placeholder="e.g. Seller details cannot be shared at this stage or client verification is pending."
+                className="text-sm resize-none"
+              />
+            </div>
+
+            <DialogFooter className="pt-2 flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAdminRejectModalOpen(false)}
+                className="cursor-pointer"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-rose-600 hover:bg-rose-700 text-white font-medium cursor-pointer gap-1.5"
+              >
+                <X className="w-3.5 h-3.5" />
+                Confirm Rejection
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

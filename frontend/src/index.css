@@ -193,6 +193,22 @@
   select {
     font-family: inherit;
   }
+
+  /* Slim modern scrollbars for tables, dialogs, and panels */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(14, 55, 86, 0.16);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 55, 86, 0.32);
+  }
 }
 
 @media print {

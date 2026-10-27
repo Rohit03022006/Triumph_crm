@@ -9,9 +9,9 @@ const LeadsApprovedPage = () => {
   return (
     <div className="w-full max-w-full min-w-0 space-y-6 pb-16 overflow-x-hidden">
       {/* Header & Breadcrumb */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-2 border-b border-border/70">
         <div>
-          <div className="flex items-center gap-2 text-sm text-slate-500 mb-2 font-medium">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
             <span
               className="cursor-pointer hover:text-slate-900 transition-colors"
               onClick={() => navigate("/admin")}
@@ -26,7 +26,7 @@ const LeadsApprovedPage = () => {
               Approvals & Review
             </span>
             <span>›</span>
-            <span className="font-semibold text-slate-800">
+            <span className="font-bold text-slate-800">
               Leads Approvals
             </span>
           </div>
@@ -35,7 +35,7 @@ const LeadsApprovedPage = () => {
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
               Leads Approvals & Verification
             </h1>
-            <span className="px-3 py-1 bg-amber-100 text-amber-800 border border-amber-200 rounded-full text-xs font-semibold">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
               Under Development
             </span>
           </div>
@@ -45,21 +45,21 @@ const LeadsApprovedPage = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
           <Button
             variant="outline"
             onClick={() => navigate("/admin/approved")}
-            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-sm h-10 px-4"
+            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Approvals Dashboard
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Approvals</span>
           </Button>
 
           <Button
             onClick={() => navigate("/admin/approved/properties")}
-            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-sm h-10 px-4 shadow-sm"
+            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-1.5"
           >
-            View Property Approvals
+            <span>Property Approvals</span>
           </Button>
         </div>
       </div>

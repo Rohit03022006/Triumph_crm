@@ -20,7 +20,11 @@ import {
   tagUnitToLead,
   uploadMedia,
   listAuditLogs,
-  getPropertyAuditLogs
+  getPropertyAuditLogs,
+  submitClearanceRequest,
+  listClearanceRequests,
+  getPropertyClearanceRequest,
+  decideClearanceRequest
 } from "./inventory.controller.js";
 
 // Ensure upload directory exists
@@ -59,6 +63,12 @@ router.post("/upload", upload.array("files", 10), uploadMedia);
 
 // Audit Logs (placed before /:id to prevent matching as id)
 router.get("/logs", listAuditLogs);
+
+// Seller Info Clearance Requests (placed before /:id)
+router.get("/clearance-requests", listClearanceRequests);
+router.get("/:id/clearance-request", getPropertyClearanceRequest);
+router.post("/:id/clearance-request", submitClearanceRequest);
+router.post("/:id/clearance-decide", decideClearanceRequest);
 
 // Units for Booking properties (placed before /:id routes)
 router.patch("/units/:unitId", updateUnit);

@@ -22,6 +22,8 @@ import Reports from "./Pages/Reports/Reports";
 import Approved from "./Pages/Dashboard/Approved_Dashboard/Approved";
 import PropertyApprovedPage from "./Pages/Dashboard/Approved_Dashboard/PropertyApprovedPage";
 import LeadsApprovedPage from "./Pages/Dashboard/Approved_Dashboard/LeadsApprovedPage";
+import RequestsApprovedPage from "./Pages/Dashboard/Approved_Dashboard/RequestsApprovedPage";
+import ExecutiveRequestsPage from "./Pages/Inventory/ExecutiveRequestsPage";
 import Executives from "./Pages/Executives_Management/Executives";
 import UserDetail from "./Pages/Executives_Management/UserDetail";
 import Settings from "./Pages/Settings/Settings";
@@ -87,6 +89,8 @@ const App = () => {
         <Route path="approved/properties" element={<PropertyApprovedPage />} />
         <Route path="approved/property" element={<PropertyApprovedPage />} />
         <Route path="approved/leads" element={<LeadsApprovedPage />} />
+        <Route path="approved/requests" element={<RequestsApprovedPage />} />
+        <Route path="approved/clearance" element={<RequestsApprovedPage />} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<ExecutiveSettings />} />
       </Route>
@@ -102,6 +106,8 @@ const App = () => {
         <Route path="inventory/:id/edit" element={<InventoryFormPage />} />
         <Route path="inventory/:id/print" element={<PropertyPrintPage />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="requests" element={<ExecutiveRequestsPage />} />
+        <Route path="clearance" element={<ExecutiveRequestsPage />} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<ExecutiveSettings />} />
       </Route>

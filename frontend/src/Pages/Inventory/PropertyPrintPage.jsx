@@ -107,7 +107,7 @@ const PropertyPrintPage = () => {
               <span className="font-semibold text-slate-800">Print Dossier (pdfcn)</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              {property.title} — Official Dossier
+              {property.title} - Official Dossier
             </h1>
           </div>
         </div>
