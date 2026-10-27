@@ -9,6 +9,47 @@ import { XIcon, CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Load
 
 const toast = ToastPrimitive.createToastManager()
 
+// Convenience helper methods
+toast.success = (title, description, options = {}) => {
+  return toast.add({
+    title: typeof title === "string" ? title : title?.title,
+    description: typeof description === "string" ? description : (typeof title === "object" ? title?.description : undefined),
+    type: "success",
+    ...(typeof description === "object" ? description : {}),
+    ...options,
+  });
+};
+
+toast.error = (title, description, options = {}) => {
+  return toast.add({
+    title: typeof title === "string" ? title : title?.title,
+    description: typeof description === "string" ? description : (typeof title === "object" ? title?.description : undefined),
+    type: "error",
+    ...(typeof description === "object" ? description : {}),
+    ...options,
+  });
+};
+
+toast.warning = (title, description, options = {}) => {
+  return toast.add({
+    title: typeof title === "string" ? title : title?.title,
+    description: typeof description === "string" ? description : (typeof title === "object" ? title?.description : undefined),
+    type: "warning",
+    ...(typeof description === "object" ? description : {}),
+    ...options,
+  });
+};
+
+toast.info = (title, description, options = {}) => {
+  return toast.add({
+    title: typeof title === "string" ? title : title?.title,
+    description: typeof description === "string" ? description : (typeof title === "object" ? title?.description : undefined),
+    type: "info",
+    ...(typeof description === "object" ? description : {}),
+    ...options,
+  });
+};
+
 function ToastProvider({
   ...props
 }) {
@@ -29,7 +70,7 @@ function ToastViewport({
     <ToastPrimitive.Viewport
       data-slot="toast-viewport"
       className={cn(
-        "pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:mx-0 sm:w-full",
+        "pointer-events-none fixed inset-x-4 bottom-4 z-[100] mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:mx-0 sm:w-full",
         className
       )}
       {...props}
@@ -155,31 +196,31 @@ function ToastIcon({
 
   if (type === "success") {
     icon = (
-      <CircleCheckIcon aria-hidden="true" />
+      <CircleCheckIcon className="text-emerald-600 w-4 h-4" aria-hidden="true" />
     )
   }
 
   if (type === "info") {
     icon = (
-      <InfoIcon aria-hidden="true" />
+      <InfoIcon className="text-blue-600 w-4 h-4" aria-hidden="true" />
     )
   }
 
   if (type === "warning") {
     icon = (
-      <TriangleAlertIcon aria-hidden="true" />
+      <TriangleAlertIcon className="text-amber-600 w-4 h-4" aria-hidden="true" />
     )
   }
 
   if (type === "error") {
     icon = (
-      <OctagonXIcon className="text-destructive" aria-hidden="true" />
+      <OctagonXIcon className="text-destructive w-4 h-4" aria-hidden="true" />
     )
   }
 
   if (type === "loading") {
     icon = (
-      <Loader2Icon className="animate-spin" aria-hidden="true" />
+      <Loader2Icon className="animate-spin text-primary w-4 h-4" aria-hidden="true" />
     )
   }
 

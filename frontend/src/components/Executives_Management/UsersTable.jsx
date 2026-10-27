@@ -45,8 +45,8 @@ const UsersTable = ({ users, totalPages, currentPage, onPageChange, isLoading, o
   };
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
+    <div className="w-full max-w-full min-w-0 overflow-x-auto">
+      <Table className="w-full min-w-[750px]">
         <TableHeader>
           <TableRow className="border-b border-border/60 bg-muted/30 hover:bg-muted/30">
             <TableHead className="w-12 px-6 py-4">

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "npx prisma migrate deploy && node src/server.js",
-    "db:seed": "npx prisma db seed",
+    "db:seed": "node prisma/seed.js",
     "lint": "eslint src",
     "format": "prettier --write src",
     "test": "vitest run",
@@ -43,6 +43,7 @@
     "resend": "^6.28.1",
     "sharp": "^0.35.4",
     "socket.io": "^4.8.3",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {

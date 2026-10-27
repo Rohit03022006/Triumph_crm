@@ -243,7 +243,7 @@ const Executives = () => {
   const paginatedUsers = filteredUsers?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div>
+    <div className="w-full max-w-full min-w-0 space-y-6 overflow-x-hidden">
       {/* Header */}
       <ExecutivesHeader onAddClick={() => { setFormData(defaultForm); setIsAddOpen(true); }} />
 
@@ -251,7 +251,7 @@ const Executives = () => {
       <ExecutivesStats stats={stats} />
 
       {/* Main Table Area */}
-      <div className="bg-white border rounded-xl shadow-sm">
+      <div className="w-full max-w-full min-w-0 bg-white border rounded-xl shadow-sm overflow-hidden">
         {/* Filters Bar */}
         {selectedIds.length > 0 && (
           <div className="bg-danger/5 border-b border-danger/10 px-6 py-3 flex items-center justify-between">
@@ -303,7 +303,7 @@ const Executives = () => {
 
       {/* Admin Reset Password Dialog */}
       <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-3xl max-w-3xl bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-slate-800">Change Staff Password</DialogTitle>
             <DialogDescription>

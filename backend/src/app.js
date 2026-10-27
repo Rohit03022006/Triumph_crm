@@ -8,6 +8,9 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import meRoutes from "./modules/users/users.routes.js";
 import resourcesRoutes from "./modules/resources/resources.routes.js";
 import leadRoutes from "./modules/leads/leads.routes.js";
+import inventoryRoutes from "./modules/inventory/inventory.routes.js";
+import logsRoutes from "./modules/logs/logs.routes.js";
+import { setupSwagger } from "./config/swagger.js";
 
 // Import clients for health checks
 import { prisma } from "./config/database.js";
@@ -16,17 +19,26 @@ import { redis } from "./config/redis.js";
 export function createApp() {
   const app = express();
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+  );
   app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
   app.use(compression());
 
   app.use(express.json({ limit: "2mb" }));
 
-  
+  // Swagger UI for API documentation
+  setupSwagger(app);
+
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/users", meRoutes);
   app.use("/api/v1/resources", resourcesRoutes);
   app.use("/api/v1/leads", leadRoutes);
+  app.use("/api/v1/inventory", inventoryRoutes);
+  app.use("/api/v1/logs", logsRoutes);
+  app.use("/uploads", express.static("uploads"));
   
 
 

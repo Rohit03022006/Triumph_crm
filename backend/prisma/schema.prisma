@@ -118,15 +118,16 @@ model PipelineStage {
 
 // Stubs for future modules to satisfy FR-4.7 import
 model Lead {
-    id          String   @id @default(cuid())
+    id          String        @id @default(cuid())
     firstName   String
     lastName    String
     email       String?
     phone       String?
     sourceId    String?
     stageId     String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    projectUnits ProjectUnit[]
 }
 
 model InventoryItem {
@@ -137,3 +138,241 @@ model InventoryItem {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
+
+// ==========================================
+// MODULE 1: INVENTORY MANAGEMENT
+// ==========================================
+
+enum DealType {
+    BOOKING
+    RETRADE
+    LEASE
+}
+
+enum PropertyStatus {
+    AVAILABLE
+    UNDER_REVIEW
+    SOLD
+    RENT_OUT
+    LOST
+}
+
+enum UnitStatus {
+    AVAILABLE
+    TAGGED
+    BOOKED
+    SOLD
+}
+
+model Developer {
+    id         String     @id @default(cuid())
+    name       String     @unique
+    isActive   Boolean    @default(true)
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    properties Property[]
+
+    @@index([name])
+}
+
+model Property {
+    id                          String         @id @default(cuid())
+    dealType                    DealType
+    title                       String         // Project Name or Property Title
+    developerId                 String?
+    developer                   Developer?     @relation(fields: [developerId], references: [id], onDelete: SetNull)
+    developerName               String?
+    category                    String         // "Residential", "Commercial"
+    subcategory                 String         // "Apartment", "Villa", "Retail Shop", etc.
+    city                        String         // "Gurgaon", "Delhi", "Kasauli", "Goa", etc.
+    locality                    String
+    projectSociety              String?
+
+    // Configuration
+    bhk                         String[]       @default([])
+    additionalSelection         String[]       @default([])
+    furnishing                  String?
+
+    // Pricing
+    price                       Float?
+    minPrice                    Float?
+    maxPrice                    Float?
+    priceUnit                   String?        // "Thousands", "Lakhs", "Crores"
+    pricePerUnitArea            Float?
+    paymentPlan                 String?
+
+    // Lease specific pricing & terms
+    monthlyRent                 Float?
+    securityDeposit             String?
+    maintenanceCharges          Float?
+    maintenanceFrequency        String?        // "Per Month", "Per Quarter", "Per Year"
+    availableFor                String[]       @default([])
+    leaseDuration               Int?           // In months
+    lockInPeriod                Int?           // In months
+    leaseAvailability           String?        // "Immediate", "Date Selection"
+    availableFromDate           DateTime?
+
+    // Retrade & Booking availability/construction status
+    facingDirection             String?
+    availabilityStatus          String?        // "Ready to Move", "Under Construction"
+    possessionDate              DateTime?
+    projectStatus               String?        // "Pre-Launch", "Launched", "Under Construction"
+    possessionMonth             String?
+    possessionYear              Int?
+
+    // Plot specific fields
+    boundaryWall                Boolean?
+    plotShape                   String?        // "Regular", "Irregular", "Corner"
+    constructionAllowed         Boolean?
+    plotLength                  Float?
+    plotBreadth                 Float?
+
+    // Structural & physical details
+    numberOfStoreys             Int?
+    numberOfUnits               Int?
+    numberOfRooms               Int?
+    floorNumber                 String?
+    totalFloors                 Int?
+    propertyAge                 String?
+    servantPujaStore            String[]       @default([])
+    parkingType                 String?        // "Covered", "Open", "None"
+    numberOfParkings            Int?
+    ceilingHeight               Float?
+    numberOfLifts               Int?
+    numberOfWashrooms           Int?
+    washroomType                String?        // "Public", "Private"
+    powerBackup                 Boolean?
+    airConditioning             Boolean?
+    connections                 String?
+
+    // Pre-leased & Commercial
+    preLeased                   Boolean?       @default(false)
+    preLeasedDetails            String?
+    roiPercentage               Float?
+
+    // Furnishing items (quantities and options)
+    furnishings                 Json?
+
+    // USP & Amenities
+    usps                        String[]       @default([])
+    amenities                   String[]       @default([])
+
+    // Content
+    description                 String?
+    status                      PropertyStatus @default(AVAILABLE)
+
+    // Seller Info (Admin visible only)
+    sellerName                  String?
+    sellerPhone                 String?
+
+    // Developer Sales Contact (Booking)
+    developerContactName        String?
+    developerContactNumber      String?
+    developerContactDesignation String?
+
+    // Primary area cache for fast sorting & listing
+    primaryArea                 Float?
+    primaryAreaUnit             String?
+
+    // Relations
+    areas                       PropertyArea[]
+    media                       PropertyMedia[]
+    units                       ProjectUnit[]
+    auditLogs                   PropertyAuditLog[]
+
+    createdById                 String?
+    createdAt                   DateTime       @default(now())
+    updatedAt                   DateTime       @updatedAt
+
+    @@index([dealType])
+    @@index([category])
+    @@index([subcategory])
+    @@index([city])
+    @@index([status])
+    @@index([price])
+    @@index([primaryArea])
+}
+
+model PropertyArea {
+    id         String   @id @default(cuid())
+    propertyId String
+    property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    areaType   String   // "Super Area", "Carpet Area", "Built-up Area", "Plot Area"
+    value      Float
+    unit       String   // "sq. ft.", "sq. m.", "sq. yd.", "acre", "kanal"
+    minArea    Float?
+    maxArea    Float?
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([propertyId])
+}
+
+model PropertyMedia {
+    id         String   @id @default(cuid())
+    propertyId String
+    property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    type       String   // "IMAGE", "VIDEO", "DOCUMENT", "BROCHURE", "LAYOUT"
+    url        String
+    name       String?
+    size       Int?
+    mimeType   String?
+    createdAt  DateTime @default(now())
+
+    @@index([propertyId])
+}
+
+model ProjectUnit {
+    id         String     @id @default(cuid())
+    propertyId String
+    property   Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    unitName   String
+    area       Float
+    areaUnit   String     @default("sq. ft.")
+    price      Float
+    status     UnitStatus @default(AVAILABLE)
+
+    leadId     String?
+    lead       Lead?      @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+
+    @@index([propertyId])
+    @@index([leadId])
+}
+
+// ==========================================
+// INVENTORY AUDIT LOGS (FR: Audit Trail)
+// ==========================================
+
+model PropertyAuditLog {
+    id            String         @id @default(cuid())
+    module        String         @default("INVENTORY") // "INVENTORY", "LEADS", "USERS"
+    propertyId    String?
+    property      Property?      @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+    propertyTitle String
+    dealType      DealType?
+    action        String         // "CREATE", "UPDATE", "STATUS_CHANGE", "DELETE", "UNIT_UPDATE"
+    
+    // Executive / User details
+    userId        String?
+    userName      String
+    userEmail     String?
+    userRole      String?
+    
+    // Changes diff: [{ field, label, oldValue, newValue }]
+    changes       Json?
+    
+    // Human readable event description
+    summary       String?
+    
+    createdAt     DateTime       @default(now())
+
+    @@index([module])
+    @@index([propertyId])
+    @@index([userId])
+    @@index([action])
+    @@index([createdAt])
+}
+

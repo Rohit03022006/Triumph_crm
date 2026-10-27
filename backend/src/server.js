@@ -23,6 +23,7 @@ async function start() {
 
     server.listen(env.PORT, () => {
       console.log(`🚀 Server running on port ${env.PORT} (${env.NODE_ENV})`);
+      console.log(`📚 Swagger API Docs available at http://localhost:${env.PORT}/api-docs`);
     });
   } catch (err) {
     console.error("❌ Failed to start server:", err);

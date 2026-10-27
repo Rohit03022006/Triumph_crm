@@ -1,6 +1,15 @@
-# Triumph CRM - Postman Testing Guide
+# Triumph CRM - API & Testing Guide
 
-This guide covers all edge cases for the currently implemented endpoints to help you test them using Postman. 
+## Interactive Swagger UI Documentation
+The backend now includes interactive Swagger UI documentation:
+- **Interactive UI:** [http://localhost:5000/api-docs](http://localhost:5000/api-docs) (or [http://localhost:5000/docs](http://localhost:5000/docs))
+- **OpenAPI 3.0 Spec JSON:** [http://localhost:5000/api-docs.json](http://localhost:5000/api-docs.json)
+
+---
+
+## Postman Testing Guide
+
+This guide covers all edge cases for the currently implemented endpoints to help you test them using Postman or Swagger UI. 
 
 ## 1. System Health Check
 

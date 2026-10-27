@@ -54,7 +54,7 @@ const UserFormDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-175 p-0 overflow-hidden bg-slate-50">
+      <DialogContent className="sm:max-w-3xl max-w-3xl p-0 overflow-hidden bg-slate-50">
         <div className="flex flex-col md:flex-row max-h-[85vh]">
           {/* Form Side */}
           <div className="flex-1 p-6 bg-white overflow-y-auto">

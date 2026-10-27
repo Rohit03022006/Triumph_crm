@@ -116,7 +116,7 @@ const UserDetail = () => {
   if (!user) return <div className="p-8 text-center text-danger">User not found</div>;
 
   return (
-    <div className="bg-background min-h-screen  rounded-2xl space-y-6">
+    <div className="w-full max-w-full min-w-0 bg-background min-h-screen rounded-2xl space-y-6 overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -233,7 +233,7 @@ const UserDetail = () => {
 
       {/* Admin Reset Password Dialog */}
       <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-3xl max-w-3xl bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-slate-800">Change Password</DialogTitle>
             <DialogDescription>

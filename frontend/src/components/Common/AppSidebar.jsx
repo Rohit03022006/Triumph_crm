@@ -23,12 +23,59 @@ import {
   UserCog,
   Settings,
   CheckCircle,
+  Logs as LogsIcon,
 } from "lucide-react";
 
 const getNavItems = (role) => {
   const prefix = role === "ADMIN" ? "/admin" : "/executive";
 
-  const items = [
+  if (role === "ADMIN") {
+    return [
+      {
+        title: "Dashboard",
+        url: prefix,
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Leads",
+        url: `${prefix}/leads`,
+        icon: Users,
+      },
+      {
+        title: "Inventory",
+        url: `${prefix}/inventory`,
+        icon: Building,
+      },
+      {
+        title: "Approved",
+        url: `${prefix}/approved`,
+        icon: CheckCircle,
+      },
+      {
+        title: "Reports",
+        url: `${prefix}/reports`,
+        icon: BarChart3,
+      },
+      {
+        title: "Users Management",
+        url: `${prefix}/users`,
+        icon: UserCog,
+      },
+      {
+        title: "Resources",
+        url: `${prefix}/resources`,
+        icon: Settings,
+      },
+      {
+        title: "Logs",
+        url: `${prefix}/logs`,
+        icon: LogsIcon,
+      },
+    ];
+  }
+
+  // Executive Nav Items
+  return [
     {
       title: "Dashboard",
       url: prefix,
@@ -48,30 +95,8 @@ const getNavItems = (role) => {
       title: "Reports",
       url: `${prefix}/reports`,
       icon: BarChart3,
-    }
+    },
   ];
-
-  if (role === "ADMIN") {
-    items.push(
-      {
-        title: "Approved",
-        url: `${prefix}/approved`,
-        icon: CheckCircle,
-      },
-      {
-        title: "Users Management",
-        url: `${prefix}/users`,
-        icon: UserCog,
-      },
-      {
-        title: "Resources",
-        url: `${prefix}/resources`,
-        icon: Settings,
-      },
-    );
-  }
-
-  return items;
 };
 
 export function AppSidebar({ role = "EXECUTIVE" }) {

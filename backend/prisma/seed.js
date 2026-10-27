@@ -61,6 +61,22 @@ async function main() {
   }
   
   console.log("✅ Seed complete! Added 20 staff members.");
+
+  // 3. Seed Developers
+  console.log("Seeding 71 developers from Rohit Resources.xlsx...");
+  const { DEVELOPERS_LIST } = await import("../src/modules/inventory/inventory.constants.js");
+  for (const name of DEVELOPERS_LIST) {
+    await prisma.developer.upsert({
+      where: { name },
+      update: {},
+      create: { name, isActive: true }
+    });
+  }
+  console.log(`✅ Seeded ${DEVELOPERS_LIST.length} developers.`);
+
+  // 4. Seed Inventory Properties, Areas, Media & Project Units
+  const { seedInventoryProperties } = await import("./seedInventoryData.js");
+  await seedInventoryProperties();
 }
 
 main()

@@ -1,10 +1,10 @@
-import { Bell, ChevronDown, Moon, Search } from "lucide-react";
+import { Bell, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,20 +34,25 @@ const Header = () => {
   };
 
   return (
-    <header className="h-16 border-b bg-card">
-      <div className="flex h-full items-center justify-end px-6">
+    <header className="h-16 border-b bg-card w-full max-w-full min-w-0">
+      <div className="flex h-full items-center justify-end px-4 sm:px-6 w-full max-w-full min-w-0">
         {/* Header Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Add Lead */}
-          <Button className="h-9 bg-primary hover:bg-brand-dark text-primary-foreground">
+          <Button className="h-9 bg-primary hover:bg-brand-dark text-primary-foreground text-xs sm:text-sm px-3 sm:px-4 inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" />
             Add Lead
           </Button>
 
+          {/* Add Inventory */}
+          <Button className="h-9 bg-primary hover:bg-brand-dark text-primary-foreground text-xs sm:text-sm px-3 sm:px-4 inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add Inventory
+          </Button>
+
           {/* Schedule Visit */}
-          <Button
-            variant="outline"
-            className="h-9 bg-primary hover:bg-brand-dark text-primary px-5"
-          >
+          <Button className="h-9 bg-primary hover:bg-brand-dark text-primary-foreground text-xs sm:text-sm px-3 sm:px-4 inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" />
             Schedule Visit
           </Button>
 
@@ -55,7 +60,7 @@ const Header = () => {
           <Button
             variant="outline"
             size="icon"
-            className="relative h-9 w-9 rounded-full"
+            className="relative h-9 w-9 rounded-full shrink-0"
           >
             <Bell className="h-4 w-4" />
 
@@ -81,12 +86,24 @@ const Header = () => {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={() => navigate(user?.role === "ADMIN" ? "/admin/profile" : "/executive/profile")} className="cursor-pointer">
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate(
+                      user?.role === "ADMIN"
+                        ? "/admin/profile"
+                        : "/executive/profile",
+                    )
+                  }
+                  className="cursor-pointer"
+                >
                   Profile
                 </DropdownMenuItem>
 
                 {user?.role === "ADMIN" && (
-                  <DropdownMenuItem onClick={() => navigate("/admin/settings")} className="cursor-pointer">
+                  <DropdownMenuItem
+                    onClick={() => navigate("/admin/settings")}
+                    className="cursor-pointer"
+                  >
                     Settings
                   </DropdownMenuItem>
                 )}

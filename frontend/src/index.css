@@ -145,11 +145,25 @@
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    position: relative;
+  }
+
+  #root {
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+    min-height: 100vh;
   }
 
   h1,
@@ -178,5 +192,91 @@
   textarea,
   select {
     font-family: inherit;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    position: static !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Completely remove UI chrome from flow */
+  header,
+  nav,
+  aside,
+  button,
+  [data-slot="sidebar"],
+  [data-slot="sidebar-trigger"],
+  [data-slot="sidebar-rail"],
+  [data-slot="sidebar-gap"],
+  [data-sidebar="sidebar"],
+  .print\:hidden,
+  .print-hidden {
+    display: none !important;
+  }
+
+  /* Reset layout wrappers to unconstrained static flow */
+  #root,
+  [data-slot="sidebar-wrapper"],
+  [data-slot="sidebar-inset"],
+  main {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    position: static !important;
+    overflow: visible !important;
+    float: none !important;
+  }
+
+  /* Property Print Document */
+  #property-print-document {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+  }
+
+  /* Table formatting & avoid breaking atomic elements */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr,
+  img,
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
