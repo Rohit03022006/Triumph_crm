@@ -42,28 +42,28 @@ const PropertyApprovedPage = () => {
       {/* Header & Breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-2 border-b border-border/70">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
             <span
-              className="cursor-pointer hover:text-slate-900 transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors"
               onClick={() => navigate("/admin")}
             >
               Dashboard
             </span>
             <span>›</span>
             <span
-              className="cursor-pointer hover:text-slate-900 transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors"
               onClick={() => navigate("/admin/approved")}
             >
               Approvals & Review
             </span>
             <span>›</span>
-            <span className="font-bold text-slate-800">
+            <span className="font-bold text-foreground">
               Property Approvals
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
               Property Approvals & Review
             </h1>
             {pendingCount > 0 ? (
@@ -78,7 +78,7 @@ const PropertyApprovedPage = () => {
             )}
           </div>
 
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Complete management of property submissions from executives. Review
             specifications, approve to publish live, or request revisions.
           </p>
@@ -88,7 +88,7 @@ const PropertyApprovedPage = () => {
           <Button
             variant="outline"
             onClick={() => navigate("/admin/approved")}
-            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
+            className="bg-card border-border text-foreground hover:bg-muted hover:text-foreground font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Approvals</span>
@@ -98,11 +98,11 @@ const PropertyApprovedPage = () => {
             onClick={handleRefresh}
             disabled={isSpinning}
             variant="outline"
-            className="group bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 active:scale-95 transition-all font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-2"
+            className="group bg-card border-border text-foreground hover:bg-muted hover:text-foreground active:scale-95 transition-all font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-2 cursor-pointer"
             title="Refresh List"
           >
             <RotateCcw
-              className={`w-4 h-4 text-slate-600 transition-transform duration-700 ${
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-700 ${
                 isSpinning ? "animate-spin text-primary" : "group-hover:-rotate-180"
               }`}
             />

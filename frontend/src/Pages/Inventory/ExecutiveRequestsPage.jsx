@@ -300,13 +300,13 @@ const ExecutiveRequestsPage = () => {
               Inventory
             </span>
             <span>›</span>
-            <span className="font-bold text-slate-800">
+            <span className="font-bold text-foreground">
               My Clearance Requests
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
               My Seller Clearance Requests
             </h1>
             {queryCount > 0 ? (
@@ -326,7 +326,7 @@ const ExecutiveRequestsPage = () => {
             )}
           </div>
 
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Track all your requests for confidential seller contact details,
             review administrator queries, and view unlocked phone numbers once
             approved.
@@ -337,7 +337,7 @@ const ExecutiveRequestsPage = () => {
           <Button
             variant="outline"
             onClick={() => navigate("/executive/inventory")}
-            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
+            className="bg-card border-border text-foreground hover:bg-muted font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Browse Inventory</span>
@@ -347,11 +347,11 @@ const ExecutiveRequestsPage = () => {
             onClick={handleRefresh}
             disabled={isSpinning}
             variant="outline"
-            className="group bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 active:scale-95 transition-all font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-2 cursor-pointer"
+            className="group bg-card border-border text-foreground hover:bg-muted active:scale-95 transition-all font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-2 cursor-pointer"
             title="Refresh Requests"
           >
             <RotateCcw
-              className={`w-4 h-4 text-slate-600 transition-transform duration-700 ${
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-700 ${
                 isSpinning
                   ? "animate-spin text-primary"
                   : "group-hover:-rotate-180"
@@ -360,121 +360,13 @@ const ExecutiveRequestsPage = () => {
             <span>Refresh</span>
           </Button>
         </div>
-      </div>
-
-      {/* Summary KPI Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div
-          onClick={() => {
-            setStatusTab("ALL");
-            setCurrentPage(1);
-          }}
-          className={`p-3.5 sm:p-4 rounded-xl border bg-white transition-all cursor-pointer ${
-            statusTab === "ALL"
-              ? "border-primary/50 shadow-sm ring-1 ring-primary/20"
-              : "border-slate-200 hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Total Requests
-            </span>
-            <ShieldAlert className="w-4 h-4 text-slate-400" />
-          </div>
-          <p className="text-2xl font-bold text-slate-900 mt-1.5">
-            {allRequests.length}
-          </p>
-          <span className="text-[11px] text-slate-400">
-            All submitted clearance tickets
-          </span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStatusTab("APPROVED");
-            setCurrentPage(1);
-          }}
-          className={`p-3.5 sm:p-4 rounded-xl border bg-white transition-all cursor-pointer ${
-            statusTab === "APPROVED"
-              ? "border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/20"
-              : "border-slate-200 hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">
-              Approved & Unlocked
-            </span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-2xl font-bold text-emerald-600 mt-1.5">
-            {approvedCount}
-          </p>
-          <span className="text-[11px] text-emerald-600/80">
-            Seller contact info unlocked
-          </span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStatusTab("QUERY_ASKED");
-            setCurrentPage(1);
-          }}
-          className={`p-3.5 sm:p-4 rounded-xl border bg-white transition-all cursor-pointer ${
-            statusTab === "QUERY_ASKED"
-              ? "border-amber-500/50 shadow-sm ring-1 ring-amber-500/20"
-              : "border-slate-200 hover:border-slate-300"
-          } ${queryCount > 0 ? "bg-amber-50/30" : ""}`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
-              Action Required
-            </span>
-            <MessageSquare className="w-4 h-4 text-amber-600" />
-          </div>
-          <div className="flex items-baseline gap-2 mt-1.5">
-            <p className="text-2xl font-bold text-amber-600">{queryCount}</p>
-            {queryCount > 0 && (
-              <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full">
-                Admin waiting
-              </span>
-            )}
-          </div>
-          <span className="text-[11px] text-amber-600/80">
-            Admin asked for clarification
-          </span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStatusTab("PENDING");
-            setCurrentPage(1);
-          }}
-          className={`p-3.5 sm:p-4 rounded-xl border bg-white transition-all cursor-pointer ${
-            statusTab === "PENDING"
-              ? "border-blue-500/50 shadow-sm ring-1 ring-blue-500/20"
-              : "border-slate-200 hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
-              Under Review
-            </span>
-            <Clock className="w-4 h-4 text-blue-600" />
-          </div>
-          <p className="text-2xl font-bold text-blue-600 mt-1.5">
-            {pendingCount}
-          </p>
-          <span className="text-[11px] text-blue-600/80">
-            Waiting for admin decision
-          </span>
-        </div>
-      </div>
+      </div> 
 
       {/* Filter Bar (Matching ApprovedFilters.jsx) */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 border border-b-0 border-border/60 bg-white rounded-t-xl">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 border border-b-0 border-border/60 bg-card rounded-t-xl">
         {/* Search & Reason Filters */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-55">
             <Input
               placeholder="Search property, locality, client, notes..."
               value={search}
@@ -482,9 +374,9 @@ const ExecutiveRequestsPage = () => {
                 setSearch(e.target.value);
                 setCurrentPage(1);
               }}
-              className="pl-9 pr-4 h-9.5 text-sm bg-slate-50 border-slate-200 rounded-lg"
+              className="pl-9 pr-4 h-9.5 text-sm bg-muted/40 border-border/70 rounded-lg text-foreground"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
           </div>
 
           <select
@@ -493,7 +385,7 @@ const ExecutiveRequestsPage = () => {
               setReasonFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-9.5 px-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium outline-none cursor-pointer hover:border-slate-300"
+            className="h-9.5 px-3 rounded-lg border border-border bg-card text-foreground text-xs sm:text-sm font-medium outline-none cursor-pointer hover:border-brand-dark"
           >
             {REASONS.map((r) => (
               <option key={r.value} value={r.value}>
@@ -507,7 +399,7 @@ const ExecutiveRequestsPage = () => {
               variant="ghost"
               size="sm"
               onClick={handleResetFilters}
-              className="group h-9.5 px-3 text-xs sm:text-sm text-red-500 hover:text-red-800 active:scale-95 transition-all cursor-pointer"
+              className="group h-9.5 px-3 text-xs sm:text-sm text-destructive hover:text-destructive/90 active:scale-95 transition-all cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1.5 transition-transform duration-500 group-hover:-rotate-180" />{" "}
               Reset
@@ -516,7 +408,7 @@ const ExecutiveRequestsPage = () => {
         </div>
 
         {/* Status Segmented Tabs (Matching ApprovedFilters) */}
-        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg self-start flex-wrap">
+        <div className="flex items-center gap-1 p-1 bg-muted rounded-lg self-start flex-wrap">
           <button
             type="button"
             onClick={() => {
@@ -525,8 +417,8 @@ const ExecutiveRequestsPage = () => {
             }}
             className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               statusTab === "ALL"
-                ? "bg-white text-slate-900 shadow-xs border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-card text-foreground shadow-xs border border-border"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             All ({allRequests.length})
@@ -540,14 +432,14 @@ const ExecutiveRequestsPage = () => {
             }}
             className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               statusTab === "QUERY_ASKED"
-                ? "bg-white text-amber-900 shadow-xs border border-amber-200"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-card text-foreground shadow-xs border border-amber/40"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
+            <MessageSquare className="w-3.5 h-3.5 text-amber" />
             <span>Action Needed</span>
             {queryCount > 0 && (
-              <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 rounded-full text-xs font-bold animate-pulse">
+              <span className="px-1.5 py-0.2 bg-amber/20 text-amber rounded-full text-xs font-bold animate-pulse">
                 {queryCount}
               </span>
             )}
@@ -561,11 +453,11 @@ const ExecutiveRequestsPage = () => {
             }}
             className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               statusTab === "PENDING"
-                ? "bg-white text-blue-900 shadow-xs border border-blue-200"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-card text-foreground shadow-xs border border-brand-dark/40"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Clock className="w-3.5 h-3.5 text-blue-600" />
+            <Clock className="w-3.5 h-3.5 text-brand-dark" />
             <span>Pending ({pendingCount})</span>
           </button>
 
@@ -577,11 +469,11 @@ const ExecutiveRequestsPage = () => {
             }}
             className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               statusTab === "APPROVED"
-                ? "bg-white text-emerald-900 shadow-xs border border-emerald-200"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-card text-foreground shadow-xs border border-teal/40"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-teal" />
             <span>Approved ({approvedCount})</span>
           </button>
 
@@ -593,36 +485,36 @@ const ExecutiveRequestsPage = () => {
             }}
             className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               statusTab === "REJECTED"
-                ? "bg-white text-rose-900 shadow-xs border border-rose-200"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-card text-foreground shadow-xs border border-destructive/40"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <XCircle className="w-3.5 h-3.5 text-rose-600" />
+            <XCircle className="w-3.5 h-3.5 text-destructive" />
             <span>Declined ({rejectedCount})</span>
           </button>
         </div>
       </div>
 
       {/* Main Table */}
-      <div className="bg-white rounded-b-xl border border-t-0 border-border/70 overflow-hidden shadow-xs">
+      <div className="bg-card rounded-b-xl border border-t-0 border-border/70 overflow-hidden shadow-xs">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
             <div className="flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-sm text-muted-foreground font-medium">
                 Loading clearance requests...
               </p>
             </div>
           </div>
         ) : filteredRequests.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-            <div className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-3">
+            <div className="w-14 h-14 bg-muted rounded-full flex items-center justify-center text-muted-foreground mb-3">
               <ShieldAlert className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-slate-800">
+            <h3 className="text-base font-bold text-foreground">
               No Clearance Requests Found
             </h3>
-            <p className="text-sm text-slate-500 max-w-md mt-1">
+            <p className="text-sm text-muted-foreground max-w-md mt-1">
               {isFiltered
                 ? "No requests match your current filters. Try resetting the search or category filters."
                 : "You have not submitted any seller contact clearance requests yet. Open any inventory listing to request seller clearance."}
@@ -633,7 +525,7 @@ const ExecutiveRequestsPage = () => {
                   variant="outline"
                   size="sm"
                   onClick={handleResetFilters}
-                  className="font-semibold text-xs"
+                  className="bg-card border-border text-foreground hover:bg-muted font-semibold text-xs cursor-pointer"
                 >
                   Clear Filters
                 </Button>
@@ -641,7 +533,7 @@ const ExecutiveRequestsPage = () => {
                 <Button
                   size="sm"
                   onClick={() => navigate("/executive/inventory")}
-                  className="bg-primary hover:bg-brand-dark text-white font-semibold text-xs"
+                  className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs cursor-pointer"
                 >
                   Browse Inventory Listings
                 </Button>
@@ -651,27 +543,27 @@ const ExecutiveRequestsPage = () => {
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-slate-50/80">
+              <TableHeader className="bg-muted/40">
                 <TableRow className="border-b border-border/70">
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4">
                     Property & Locality
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4">
                     Purpose & Client
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4 min-w-[220px]">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4 min-w-55">
                     Admin Response & Updates
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4">
                     Seller Contact Info
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4">
                     Date & Time
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4">
                     Status
                   </TableHead>
-                  <TableHead className="font-bold text-slate-700 text-xs uppercase tracking-wider py-3.5 px-4 text-right">
+                  <TableHead className="font-bold text-foreground text-xs uppercase tracking-wider py-3.5 px-4 text-right">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -688,21 +580,21 @@ const ExecutiveRequestsPage = () => {
                   return (
                     <TableRow
                       key={req.propertyId}
-                      className={`border-b border-border/60 hover:bg-slate-50/70 transition-colors ${
+                      className={`border-b border-border/60 hover:bg-muted/30 transition-colors ${
                         isQuery ? "bg-amber-50/20" : ""
                       }`}
                     >
                       {/* Property & Locality */}
                       <TableCell className="py-3.5 px-4 align-top">
-                        <div className="flex flex-col gap-1 max-w-[260px]">
+                        <div className="flex flex-col gap-1 max-w-65">
                           <button
                             type="button"
                             onClick={() =>
                               navigate(`/executive/inventory/${req.propertyId}`)
                             }
-                            className="text-left font-bold text-slate-900 hover:text-primary transition-colors text-sm line-clamp-1 cursor-pointer flex items-center gap-1.5 group"
+                            className="text-left font-bold text-foreground hover:text-brand-dark transition-colors text-sm line-clamp-1 cursor-pointer flex items-center gap-1.5 group"
                           >
-                            <Building2 className="w-3.5 h-3.5 text-slate-400 group-hover:text-primary shrink-0" />
+                            <Building2 className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary shrink-0" />
                             <span className="truncate">
                               {req.propertyTitle || "Property Listing"}
                             </span>
@@ -717,15 +609,15 @@ const ExecutiveRequestsPage = () => {
                               </span>
                             )}
                             {req.locality && (
-                              <span className="flex items-center gap-0.5 text-xs text-slate-500 truncate">
-                                <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                              <span className="flex items-center gap-0.5 text-xs text-muted-foreground truncate">
+                                <MapPin className="w-3 h-3 text-muted-foreground shrink-0" />
                                 <span className="truncate">{req.locality}</span>
                               </span>
                             )}
                           </div>
 
                           {req.price && (
-                            <span className="text-xs font-semibold text-slate-700">
+                            <span className="text-xs font-semibold text-foreground">
                               {formatPrice(req.price, req.dealType)}
                             </span>
                           )}
@@ -734,22 +626,22 @@ const ExecutiveRequestsPage = () => {
 
                       {/* Purpose & Client */}
                       <TableCell className="py-3.5 px-4 align-top">
-                        <div className="space-y-1 max-w-[220px]">
-                          <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                        <div className="space-y-1 max-w-55">
+                          <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold bg-muted text-foreground border border-border">
                             {req.reason}
                           </span>
                           {req.clientName && (
-                            <div className="text-xs text-slate-700 flex items-center gap-1">
-                              <span className="text-slate-400 font-medium">
+                            <div className="text-xs text-foreground flex items-center gap-1">
+                              <span className="text-muted-foreground font-medium">
                                 Client:
                               </span>
-                              <strong className="font-semibold text-slate-900">
+                              <strong className="font-semibold text-foreground">
                                 {req.clientName}
                               </strong>
                             </div>
                           )}
                           {req.notes && (
-                            <p className="text-[11px] text-slate-500 italic line-clamp-2">
+                            <p className="text-[11px] text-muted-foreground italic line-clamp-2">
                               "{req.notes}"
                             </p>
                           )}
@@ -758,7 +650,7 @@ const ExecutiveRequestsPage = () => {
 
                       {/* Admin Response & Updates */}
                       <TableCell className="py-3.5 px-4 align-top">
-                        <div className="max-w-[280px]">
+                        <div className="max-w-70">
                           {isApproved && (
                             <div className="p-2 rounded-lg bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-900 space-y-1">
                               <div className="flex items-center gap-1.5 font-bold text-emerald-800">
@@ -790,7 +682,7 @@ const ExecutiveRequestsPage = () => {
                                 </span>
                               </div>
 
-                              <p className="italic text-slate-800 bg-white p-2 rounded border border-amber-200/70 text-[11px] font-medium leading-relaxed">
+                              <p className="italic text-foreground bg-card p-2 rounded border border-amber-200/70 text-[11px] font-medium leading-relaxed">
                                 "{req.adminFeedback}"
                               </p>
 
@@ -809,7 +701,7 @@ const ExecutiveRequestsPage = () => {
                                 type="button"
                                 size="sm"
                                 onClick={() => handleOpenReplyDialog(req)}
-                                className="w-full h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold cursor-pointer shadow-2xs flex items-center justify-center gap-1.5"
+                                className="w-full h-7 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer shadow-2xs flex items-center justify-center gap-1.5"
                               >
                                 <Send className="w-3 h-3" />
                                 <span>
@@ -842,12 +734,12 @@ const ExecutiveRequestsPage = () => {
                           )}
 
                           {isPending && (
-                            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/70 text-xs text-slate-600 space-y-1">
-                              <div className="flex items-center gap-1.5 font-semibold text-slate-700">
-                                <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0 animate-spin" />
+                            <div className="p-2 rounded-lg bg-muted/40 border border-border/70 text-xs text-muted-foreground space-y-1">
+                              <div className="flex items-center gap-1.5 font-semibold text-foreground">
+                                <Clock className="w-3.5 h-3.5 text-amber shrink-0 animate-spin" />
                                 <span>Awaiting Review</span>
                               </div>
-                              <p className="text-[11px] text-slate-500">
+                              <p className="text-[11px] text-muted-foreground">
                                 Request in queue. Admin will review and unlock
                                 contact.
                               </p>
@@ -859,7 +751,7 @@ const ExecutiveRequestsPage = () => {
                       {/* Seller Contact Info */}
                       <TableCell className="py-3.5 px-4 align-top">
                         {isApproved ? (
-                          <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-200 space-y-1.5 min-w-[180px]">
+                          <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-200 space-y-1.5 min-w-45">
                             <div className="flex items-center justify-between gap-1">
                               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1">
                                 <Unlock className="w-3 h-3 text-emerald-600" />
@@ -906,7 +798,7 @@ const ExecutiveRequestsPage = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-center space-y-1 min-w-[160px]">
+                          <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-center space-y-1 min-w-40">
                             <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-slate-500">
                               <Lock className="w-3.5 h-3.5 text-slate-400" />
                               <span>Confidential Info</span>
@@ -971,7 +863,7 @@ const ExecutiveRequestsPage = () => {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg cursor-pointer"
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg cursor-pointer"
                                 title="Action Options"
                               >
                                 <MoreVertical className="w-4 h-4" />
@@ -980,7 +872,7 @@ const ExecutiveRequestsPage = () => {
                           />
                           <DropdownMenuContent
                             align="end"
-                            className="w-48 bg-white border border-slate-200 shadow-lg rounded-xl p-1 z-50"
+                            className="w-48 bg-card border border-border shadow-lg rounded-xl p-1 z-50"
                           >
                             <DropdownMenuItem
                               onClick={() =>
@@ -988,9 +880,9 @@ const ExecutiveRequestsPage = () => {
                                   `/executive/inventory/${req.propertyId}`,
                                 )
                               }
-                              className="text-xs text-slate-700 hover:bg-slate-50 cursor-pointer flex items-center gap-2 py-2"
+                              className="text-xs text-foreground hover:bg-muted cursor-pointer flex items-center gap-2 py-2"
                             >
-                              <Eye className="w-3.5 h-3.5 text-slate-500" />
+                              <Eye className="w-3.5 h-3.5 text-muted-foreground" />
                               <span>View Property</span>
                             </DropdownMenuItem>
 
@@ -1013,9 +905,9 @@ const ExecutiveRequestsPage = () => {
                                       req.propertyId,
                                     )
                                   }
-                                  className="text-xs text-slate-700 hover:bg-slate-50 cursor-pointer flex items-center gap-2 py-2"
+                                  className="text-xs text-foreground hover:bg-muted cursor-pointer flex items-center gap-2 py-2"
                                 >
-                                  <Copy className="w-3.5 h-3.5 text-slate-500" />
+                                  <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                                   <span>Copy Phone Number</span>
                                 </DropdownMenuItem>
                               </>
@@ -1023,10 +915,10 @@ const ExecutiveRequestsPage = () => {
 
                             {!req.dismissedByExecutive && (
                               <>
-                                <DropdownMenuSeparator className="my-1 bg-slate-100" />
+                                <DropdownMenuSeparator className="my-1 bg-border/60" />
                                 <DropdownMenuItem
                                   onClick={() => handleDismissBellAlert(req)}
-                                  className="text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-50 cursor-pointer flex items-center gap-2 py-2"
+                                  className="text-xs text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer flex items-center gap-2 py-2"
                                 >
                                   <Bell className="w-3.5 h-3.5" />
                                   <span>Dismiss Bell Alert</span>
@@ -1046,18 +938,18 @@ const ExecutiveRequestsPage = () => {
 
         {/* Pagination Bar */}
         {filteredRequests.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-border/70 bg-slate-50/60 text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-border/70 bg-card text-xs text-muted-foreground">
             <div>
               Showing{" "}
-              <strong className="text-slate-800">
+              <strong className="text-foreground">
                 {(currentPage - 1) * PAGE_SIZE + 1}
               </strong>{" "}
               to{" "}
-              <strong className="text-slate-800">
+              <strong className="text-foreground">
                 {Math.min(currentPage * PAGE_SIZE, filteredRequests.length)}
               </strong>{" "}
               of{" "}
-              <strong className="text-slate-800">
+              <strong className="text-foreground">
                 {filteredRequests.length}
               </strong>{" "}
               clearance requests
@@ -1069,13 +961,13 @@ const ExecutiveRequestsPage = () => {
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="h-8 px-2.5 text-xs bg-white border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50"
+                className="h-8 px-2.5 text-xs bg-card border-border text-foreground hover:bg-muted cursor-pointer disabled:opacity-50"
               >
                 <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                 Previous
               </Button>
 
-              <span className="px-2 font-medium text-slate-700">
+              <span className="px-2 font-medium text-foreground">
                 Page {currentPage} of {totalPages}
               </span>
 
@@ -1086,7 +978,7 @@ const ExecutiveRequestsPage = () => {
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage === totalPages}
-                className="h-8 px-2.5 text-xs bg-white border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50"
+                className="h-8 px-2.5 text-xs bg-card border-border text-foreground hover:bg-muted cursor-pointer disabled:opacity-50"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />
@@ -1098,13 +990,13 @@ const ExecutiveRequestsPage = () => {
 
       {/* Reply to Admin Query Dialog */}
       <Dialog open={replyDialogOpen} onOpenChange={setReplyDialogOpen}>
-        <DialogContent className="sm:max-w-md bg-white rounded-xl shadow-xl border border-slate-200">
+        <DialogContent className="sm:max-w-md bg-card rounded-xl shadow-xl border border-border">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-amber-600" />
+            <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-amber" />
               Reply to Admin Clarification Query
             </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500">
+            <DialogDescription className="text-xs text-muted-foreground">
               Provide additional details or client info to satisfy the
               Administrator's query. Once sent, status will update to Pending
               Review.
@@ -1113,22 +1005,22 @@ const ExecutiveRequestsPage = () => {
 
           {selectedRequest && (
             <form onSubmit={handleSubmitReply} className="space-y-4 pt-1">
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1.5">
-                <p className="font-bold text-slate-900">
+              <div className="bg-muted/40 p-3 rounded-lg border border-border/70 text-xs space-y-1.5">
+                <p className="font-bold text-foreground">
                   {selectedRequest.propertyTitle}
                 </p>
-                <div className="flex items-center gap-2 text-slate-500 text-[11px]">
+                <div className="flex items-center gap-2 text-muted-foreground text-[11px]">
                   <span>Reason: {selectedRequest.reason}</span>
                   {selectedRequest.clientName && (
                     <span>• Client: {selectedRequest.clientName}</span>
                   )}
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-slate-200/80">
+                <div className="mt-2 pt-2 border-t border-border/60">
                   <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
                     Admin's Question:
                   </span>
-                  <p className="italic text-slate-800 font-medium mt-0.5">
+                  <p className="italic text-foreground font-medium mt-0.5">
                     "{selectedRequest.adminFeedback}"
                   </p>
                 </div>
@@ -1137,7 +1029,7 @@ const ExecutiveRequestsPage = () => {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="replyMessage"
-                  className="text-xs font-semibold text-slate-700"
+                  className="text-xs font-semibold text-foreground"
                 >
                   Your Response / Explanation *
                 </Label>
@@ -1147,30 +1039,30 @@ const ExecutiveRequestsPage = () => {
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   rows={4}
-                  className="text-xs bg-slate-50 border-slate-200 rounded-lg focus:bg-white resize-none"
+                  className="text-xs bg-muted/40 border-border rounded-lg focus:bg-card text-foreground resize-none"
                   autoFocus
                   required
                 />
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[10px] text-muted-foreground">
                   Be specific so the admin can authorize seller contact
                   clearance promptly.
                 </span>
               </div>
 
-              <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t border-slate-100">
+              <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t border-border/60">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setReplyDialogOpen(false)}
                   disabled={isSubmittingReply}
-                  className="h-8.5 text-xs border-slate-200 text-slate-700 hover:bg-slate-50"
+                  className="h-8.5 text-xs bg-card border-border text-foreground hover:bg-muted cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmittingReply || !replyMessage.trim()}
-                  className="h-8.5 text-xs bg-primary hover:bg-brand-dark text-white font-semibold flex items-center gap-1.5 shadow-xs"
+                  className="h-8.5 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   {isSubmittingReply ? (
                     <>

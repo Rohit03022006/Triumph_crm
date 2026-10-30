@@ -34,7 +34,7 @@ const formatRelativeTime = (dateString) => {
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
   const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours}h ago`;
+  if (diffInHours < 60) return `${diffInHours}h ago`;
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 7) return `${diffInDays}d ago`;
   return date.toLocaleDateString("en-IN", {
@@ -50,7 +50,6 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["approved-preview-properties"],
     queryFn: async () => {
-      // First try to fetch under_review
       const pendingRes = await fetchProperties({
         page: 1,
         limit: 5,
@@ -61,7 +60,6 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
         return { items: pendingRes.data, isPending: true };
       }
 
-      // If no under_review, fetch recent submissions
       const recentRes = await fetchProperties({ page: 1, limit: 5 });
       return { items: recentRes?.data || [], isPending: false };
     },
@@ -72,19 +70,19 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
   const isPendingList = data?.isPending || false;
 
   return (
-    <div className="bg-white border border-border/70 rounded-xl p-6 shadow-xs flex flex-col justify-between h-full space-y-5">
+    <div className="bg-card border border-border/70 rounded-xl p-6 shadow-xs flex flex-col justify-between h-full space-y-5">
       {/* Card Header */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-2xs">
+            <div className="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-2xs">
               <Building2 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 font-heading">
+              <h3 className="text-base font-bold text-foreground font-heading">
                 Property Approvals
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Executive submissions & publication review
               </p>
             </div>
@@ -101,7 +99,7 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
           )}
         </div>
 
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed">
           Review and approve inventory listings submitted by sales executives.
           Verify documentation, pricing, and project specs before going live.
         </p>
@@ -109,7 +107,7 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
 
       {/* Submissions Preview List */}
       <div className="space-y-2 flex-1">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider pb-1 border-b border-slate-100">
+        <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider pb-1 border-b border-border/60">
           <span>{isPendingList ? "Awaiting Review" : "Recent Submissions"}</span>
           <span>Status</span>
         </div>
@@ -119,16 +117,16 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="h-12 bg-slate-100 rounded-lg animate-pulse"
+                className="h-12 bg-muted/50 rounded-lg animate-pulse"
               />
             ))}
           </div>
         ) : previewItems.length === 0 ? (
-          <div className="text-center py-8 text-xs text-slate-400">
+          <div className="text-center py-8 text-xs text-muted-foreground">
             No property submissions found.
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border/60">
             {previewItems.map((item) => {
               const creatorName =
                 item.creator?.fullName ||
@@ -142,40 +140,40 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
                 <div
                   key={item.id}
                   onClick={() => navigate("/admin/approved/properties")}
-                  className="py-2.5 px-2 -mx-2 rounded-lg hover:bg-slate-50/80 transition-colors cursor-pointer flex items-center justify-between gap-3 group"
+                  className="py-2.5 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors cursor-pointer flex items-center justify-between gap-3 group"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-semibold text-xs flex items-center justify-center shrink-0 border border-slate-200">
+                    <div className="w-7 h-7 rounded-full bg-muted text-foreground font-semibold text-xs flex items-center justify-center shrink-0 border border-border">
                       {creatorInitial}
                     </div>
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-xs font-semibold text-slate-800 truncate max-w-[140px] sm:max-w-[180px]">
+                        <span className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors truncate max-w-35 sm:max-w-45">
                           {title}
                         </span>
                         {item.dealType && (
-                          <span className="px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-600">
+                          <span className="px-1.5 py-0.2 rounded text-[10px] font-medium bg-muted text-foreground/80">
                             {item.dealType}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
                         <span className="flex items-center gap-1">
-                          <User className="w-3 h-3 text-slate-400" />
+                          <User className="w-3 h-3 text-muted-foreground" />
                           {creatorName}
                         </span>
                         {item.locality && (
                           <>
                             <span>•</span>
-                            <span className="flex items-center gap-1 truncate max-w-[100px]">
-                              <MapPin className="w-3 h-3 text-slate-400" />
+                            <span className="flex items-center gap-1 truncate max-w-25">
+                              <MapPin className="w-3 h-3 text-muted-foreground" />
                               {item.locality}
                             </span>
                           </>
                         )}
                         <span>•</span>
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-foreground">
                           {formatPrice(item.price)}
                         </span>
                       </div>
@@ -192,7 +190,7 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
                         Live
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-600">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-muted text-foreground/70">
                         {item.status || "Draft"}
                       </span>
                     )}
@@ -205,10 +203,10 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
       </div>
 
       {/* Card Action: View All */}
-      <div className="pt-2 border-t border-slate-100">
+      <div className="pt-2 border-t border-border/60">
         <Button
           onClick={() => navigate("/admin/approved/properties")}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm h-10 shadow-xs flex items-center justify-center gap-2 transition-all"
+          className="w-full bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-sm h-10 shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <span>View All Property Approvals</span>
           <ArrowRight className="w-4 h-4" />
@@ -219,4 +217,3 @@ const PropertyApprovedCard = ({ pendingCount = 0 }) => {
 };
 
 export default PropertyApprovedCard;
-

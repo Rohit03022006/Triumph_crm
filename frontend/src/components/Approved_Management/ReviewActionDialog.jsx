@@ -26,19 +26,19 @@ const ReviewActionDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl max-w-3xl p-6 bg-white rounded-xl shadow-lg border">
+      <DialogContent className="sm:max-w-3xl max-w-3xl p-6 bg-card rounded-xl shadow-lg border border-border text-foreground">
         <DialogHeader className="space-y-2">
-          <div className="flex items-center gap-2.5 text-amber-700">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-amber-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-amber/15 rounded-lg text-amber">
+              <AlertCircle className="w-5 h-5 text-amber" />
             </div>
-            <DialogTitle className="text-lg font-bold text-slate-900">
+            <DialogTitle className="text-lg font-bold text-foreground font-heading">
               Request Revisions / Feedback
             </DialogTitle>
           </div>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-sm text-muted-foreground">
             Provide guidance or required changes for{" "}
-            <span className="font-semibold text-slate-800">
+            <span className="font-semibold text-foreground">
               "{property?.title}"
             </span>
             . This feedback will be recorded in the audit log and visible to the
@@ -48,7 +48,7 @@ const ReviewActionDialog = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-3">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
               Feedback / Reason for Revision
             </label>
             <textarea
@@ -57,7 +57,7 @@ const ReviewActionDialog = ({
               placeholder="e.g. Please update the carpet area certificate, verify facing direction, or re-upload higher resolution layouts."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full text-sm p-3 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"
+              className="w-full text-sm p-3 border border-border bg-background text-foreground rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none placeholder:text-muted-foreground"
             />
           </div>
 
@@ -67,14 +67,14 @@ const ReviewActionDialog = ({
               variant="outline"
               onClick={onClose}
               disabled={isPending}
-              className="text-sm h-9.5 px-4"
+              className="border-border text-foreground hover:bg-muted text-sm h-9.5 px-4 cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isPending || !reason.trim()}
-              className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold h-9.5 px-4 flex items-center gap-1.5"
+              className="bg-primary hover:bg-brand-dark text-primary-foreground text-sm font-semibold h-9.5 px-4 flex items-center gap-1.5 cursor-pointer shadow-2xs"
             >
               <Send className="w-4 h-4" />
               {isPending ? "Submitting..." : "Send Feedback"}
@@ -87,4 +87,3 @@ const ReviewActionDialog = ({
 };
 
 export default ReviewActionDialog;
-

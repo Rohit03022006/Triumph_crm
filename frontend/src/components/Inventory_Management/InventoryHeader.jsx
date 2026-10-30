@@ -21,11 +21,11 @@ const InventoryHeader = ({ onAddClick }) => {
             Dashboard
           </span>
           <span>›</span>
-          <span className="font-bold text-slate-800">Inventory Management</span>
+          <span className="font-bold text-foreground">Inventory Management</span>
         </div>
 
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
             Inventory Management
           </h1>
           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
@@ -33,7 +33,7 @@ const InventoryHeader = ({ onAddClick }) => {
           </span>
         </div>
 
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           Manage, organize, and track residential and commercial properties across all categories.
         </p>
       </div>
@@ -43,9 +43,9 @@ const InventoryHeader = ({ onAddClick }) => {
           <Button
             variant="outline"
             onClick={() => navigate(logsPath)}
-            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
+            className="bg-card border-border text-foreground hover:bg-muted font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
-            <History className="w-4 h-4 text-slate-500" />
+            <History className="w-4 h-4 text-muted-foreground" />
             <span>Audit Logs</span>
           </Button>
         )}

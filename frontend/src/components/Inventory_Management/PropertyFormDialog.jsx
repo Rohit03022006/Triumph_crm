@@ -1896,7 +1896,7 @@ const PropertyFormDialog = ({
               variant="outline"
               onClick={() => setIsOpen(false)}
               disabled={isPending}
-              className="text-xs h-9 px-4"
+              className="text-xs h-9 px-4 bg-card border-border text-foreground hover:bg-muted cursor-pointer font-semibold"
             >
               Cancel
             </Button>
@@ -1906,7 +1906,7 @@ const PropertyFormDialog = ({
                   type="button"
                   variant="outline"
                   onClick={handlePrevTab}
-                  className="text-xs h-9 px-3"
+                  className="text-xs h-9 px-3 bg-card border-border text-foreground hover:bg-muted cursor-pointer font-semibold"
                 >
                   <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                   Prev
@@ -1916,7 +1916,7 @@ const PropertyFormDialog = ({
                 <Button
                   type="button"
                   onClick={handleNextTab}
-                  className="bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs h-9 px-3.5 shadow-2xs"
+                  className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs h-9 px-3.5 shadow-2xs cursor-pointer"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5 ml-1" />

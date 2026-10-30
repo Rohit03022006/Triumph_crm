@@ -11,28 +11,28 @@ const LeadsApprovedPage = () => {
       {/* Header & Breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-2 border-b border-border/70">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
             <span
-              className="cursor-pointer hover:text-slate-900 transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors"
               onClick={() => navigate("/admin")}
             >
               Dashboard
             </span>
             <span>›</span>
             <span
-              className="cursor-pointer hover:text-slate-900 transition-colors"
+              className="cursor-pointer hover:text-foreground transition-colors"
               onClick={() => navigate("/admin/approved")}
             >
               Approvals & Review
             </span>
             <span>›</span>
-            <span className="font-bold text-slate-800">
+            <span className="font-bold text-foreground">
               Leads Approvals
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
               Leads Approvals & Verification
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
@@ -40,7 +40,7 @@ const LeadsApprovedPage = () => {
             </span>
           </div>
 
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Review and sign off on high-value lead assignments, executive transfer requests, and lead disqualifications.
           </p>
         </div>
@@ -49,7 +49,7 @@ const LeadsApprovedPage = () => {
           <Button
             variant="outline"
             onClick={() => navigate("/admin/approved")}
-            className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
+            className="bg-card border-border text-foreground hover:bg-muted hover:text-foreground font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Approvals</span>
@@ -57,7 +57,7 @@ const LeadsApprovedPage = () => {
 
           <Button
             onClick={() => navigate("/admin/approved/properties")}
-            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-1.5"
+            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
             <span>Property Approvals</span>
           </Button>
@@ -65,47 +65,47 @@ const LeadsApprovedPage = () => {
       </div>
 
       {/* Main Full-page Card */}
-      <div className="bg-white border border-border/70 rounded-xl p-12 shadow-xs text-center max-w-3xl mx-auto space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mx-auto shadow-2xs">
+      <div className="bg-card border border-border/70 rounded-xl p-12 shadow-xs text-center max-w-3xl mx-auto space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mx-auto shadow-2xs">
           <UserCheck className="w-8 h-8" />
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-slate-900 font-heading">
+          <h3 className="text-xl font-bold text-foreground font-heading">
             Leads Approval Workflow
           </h3>
-          <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
             Configure approval checkpoints for lead assignments, transfers between executives, and deal qualification before progressing into active pipeline stages.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-left">
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-            <div className="flex items-center gap-2 text-amber-600 font-bold text-sm">
+          <div className="p-4 rounded-xl bg-muted/40 border border-border/60 space-y-2">
+            <div className="flex items-center gap-2 text-amber font-bold text-sm">
               <Clock className="w-4 h-4" />
               <span>Pending Reviews</span>
             </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Queue of inbound lead assignments requiring administrator review and routing.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-            <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+          <div className="p-4 rounded-xl bg-muted/40 border border-border/60 space-y-2">
+            <div className="flex items-center gap-2 text-teal font-bold text-sm">
               <CheckCircle2 className="w-4 h-4" />
               <span>Verified Leads</span>
             </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Approved qualified leads authorized for executive meetings and site visits.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-            <div className="flex items-center gap-2 text-blue-600 font-bold text-sm">
+          <div className="p-4 rounded-xl bg-muted/40 border border-border/60 space-y-2">
+            <div className="flex items-center gap-2 text-info font-bold text-sm">
               <Users className="w-4 h-4" />
               <span>Transfer Sign-offs</span>
             </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Formal approval process for transferring leads from one executive to another.
             </p>
           </div>
@@ -116,4 +116,3 @@ const LeadsApprovedPage = () => {
 };
 
 export default LeadsApprovedPage;
-

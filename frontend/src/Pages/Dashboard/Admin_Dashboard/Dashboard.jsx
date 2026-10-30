@@ -24,15 +24,15 @@ const Dashboard = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/70">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
             <span>Operations Dashboard</span>
             <span>•</span>
             <span className="text-emerald-600 font-bold">Live System</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
             Dashboard
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Real estate inventory status, customer pipeline metrics, and daily operations.
           </p>
         </div>
@@ -41,7 +41,7 @@ const Dashboard = () => {
           <Button
             onClick={() => navigate(`${prefix}/leads`)}
             variant="outline"
-            className="border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-4"
+            className="bg-card border-border text-foreground hover:bg-muted font-semibold text-xs sm:text-sm h-10 px-4 cursor-pointer"
           >
             <Plus className="w-4 h-4 mr-1.5 text-primary" />
             Add Lead
@@ -49,7 +49,7 @@ const Dashboard = () => {
 
           <Button
             onClick={() => navigate(`${prefix}/inventory/new`)}
-            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs"
+            className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs cursor-pointer"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Inventory
@@ -59,7 +59,7 @@ const Dashboard = () => {
 
       {/* Dashboard KPI Stats */}
       <div className="space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
           Executive Overview
         </h3>
         <DashboardStats />

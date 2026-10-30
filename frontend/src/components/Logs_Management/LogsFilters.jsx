@@ -22,16 +22,16 @@ const LogsFilters = ({
   );
 
   return (
-    <div className="bg-white border border-border/70 rounded-xl p-3 sm:p-4 shadow-xs">
+    <div className="bg-card border border-border/70 rounded-xl p-3 sm:p-4 shadow-xs">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 w-full">
         {/* Search Input */}
         <div className="relative flex-1 min-w-[240px] max-w-full lg:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search by property, executive, or change summary..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 rounded-full h-10 text-sm bg-muted/40 border-border/70 w-full focus-visible:ring-1"
+            className="pl-9 pr-4 rounded-full h-10 text-sm bg-muted/40 border-border/70 text-foreground w-full focus-visible:ring-1"
           />
         </div>
 
@@ -42,7 +42,7 @@ const LogsFilters = ({
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
             aria-label="Filter by action"
-            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-background text-foreground cursor-pointer outline-none hover:border-slate-400 transition-colors"
+            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-card text-foreground cursor-pointer outline-none hover:border-brand-dark transition-colors"
           >
             <option value="ALL">All Actions</option>
             <option value="STATUS_CHANGE">Status Changes</option>
@@ -57,7 +57,7 @@ const LogsFilters = ({
             value={dealTypeFilter}
             onChange={(e) => setDealTypeFilter(e.target.value)}
             aria-label="Filter by deal type"
-            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-background text-foreground cursor-pointer outline-none hover:border-slate-400 transition-colors"
+            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-card text-foreground cursor-pointer outline-none hover:border-brand-dark transition-colors"
           >
             <option value="ALL">All Deal Types</option>
             <option value="BOOKING">Booking</option>
@@ -70,7 +70,7 @@ const LogsFilters = ({
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
             aria-label="Filter by date range"
-            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-background text-foreground cursor-pointer outline-none hover:border-slate-400 transition-colors"
+            className="rounded-full h-10 px-3.5 text-sm font-medium border border-border/70 bg-card text-foreground cursor-pointer outline-none hover:border-brand-dark transition-colors"
           >
             <option value="ALL">All Time</option>
             <option value="today">Today</option>
@@ -83,7 +83,7 @@ const LogsFilters = ({
             <Button
               variant="ghost"
               onClick={onReset}
-              className="group rounded-full h-10 px-3 text-sm text-red-500 hover:text-red-900 active:scale-95 transition-all"
+              className="group rounded-full h-10 px-3 text-sm text-destructive hover:text-destructive/90 active:scale-95 transition-all cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1.5 transition-transform duration-500 group-hover:-rotate-180" />
               Reset

@@ -380,7 +380,7 @@ const Header = () => {
                                 type="button"
                                 size="sm"
                                 onClick={(e) => handleGrantClearance(req, e)}
-                                className="h-6 px-2.5 text-[10px] sm:text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white font-medium cursor-pointer shadow-2xs"
+                                className="h-6 px-2.5 text-[10px] sm:text-[11px] bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer shadow-2xs"
                                 title="Approve clearance"
                               >
                                 <Check className="w-3 h-3 mr-1" /> Approve
@@ -441,7 +441,7 @@ const Header = () => {
                               type="button"
                               size="sm"
                               onClick={() => handleViewProperty(req.propertyId)}
-                              className="h-7 px-2.5 text-xs bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer"
+                              className="h-7 px-2.5 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer"
                             >
                               View Property & Reply
                             </Button>
@@ -504,7 +504,7 @@ const Header = () => {
                               type="button"
                               size="sm"
                               onClick={() => handleViewProperty(req.propertyId)}
-                              className="h-7 px-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium cursor-pointer"
+                              className="h-7 px-2.5 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer"
                             >
                               View Property Details
                             </Button>
@@ -711,7 +711,7 @@ const Header = () => {
                   {user?.name || "CRM User"}
                 </p>
                 <div className="flex items-center justify-between gap-2 mt-0.5">
-                  <p className="text-xs text-slate-500 truncate max-w-[130px]">
+                  <p className="text-xs text-slate-500 truncate max-w-32.5">
                     {user?.email || ""}
                   </p>
                   <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-700">
@@ -824,10 +824,10 @@ const Header = () => {
                 type="submit"
                 size="sm"
                 disabled={isSubmitting}
-                className={`font-medium cursor-pointer gap-1.5 text-white ${
+                className={`font-semibold cursor-pointer gap-1.5 text-white ${
                   dialogAction === "QUERY"
-                    ? "bg-amber-600 hover:bg-amber-700"
-                    : "bg-rose-600 hover:bg-rose-700"
+                    ? "bg-primary hover:bg-brand-dark text-primary-foreground"
+                    : "bg-destructive hover:bg-destructive/90"
                 }`}
               >
                 {dialogAction === "QUERY" ? (

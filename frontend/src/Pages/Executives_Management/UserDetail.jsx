@@ -177,9 +177,9 @@ const UserDetail = () => {
               setNewPassword('');
               setIsPasswordDialogOpen(true);
             }}
-            className="border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5"
+            className="bg-card border-border text-foreground hover:bg-muted font-semibold text-xs sm:text-sm h-10 px-3.5 shadow-2xs flex items-center gap-1.5 cursor-pointer"
           >
-            <Lock className="w-4 h-4 text-slate-500" />
+            <Lock className="w-4 h-4 text-muted-foreground" />
             <span>Change Password</span>
           </Button>
           <Button

@@ -3145,7 +3145,7 @@ const InventoryFormPage = () => {
                   type="button"
                   variant="outline"
                   onClick={handlePrevTab}
-                  className="border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium h-10 px-4"
+                  className="bg-card border-border text-foreground hover:bg-muted text-sm font-semibold h-10 px-4 cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1.5" />
                   Previous: Mandatory Details
@@ -3156,7 +3156,7 @@ const InventoryFormPage = () => {
                 <Button
                   type="button"
                   onClick={handleNextTab}
-                  className="bg-slate-800 hover:bg-slate-900 text-white font-semibold text-sm h-10 px-5 shadow-xs"
+                  className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-sm h-10 px-5 shadow-xs cursor-pointer"
                 >
                   <span>Next: {formTabs[currentTabIndex + 1]?.label}</span>
                   <ChevronRight className="w-4 h-4 ml-1.5" />

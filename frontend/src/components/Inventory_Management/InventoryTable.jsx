@@ -117,7 +117,7 @@ const InventoryTable = ({
 }) => {
   return (
     <div className="w-full max-w-full min-w-0 overflow-x-auto">
-      <Table className="w-full min-w-[850px]">
+      <Table className="w-full min-w-212.5">
         <TableHeader>
           <TableRow className="border-b border-border/60 bg-muted/30 hover:bg-muted/30">
             <TableHead className="px-6 py-4 font-semibold text-muted-foreground text-xs tracking-wider uppercase h-12">
@@ -215,7 +215,7 @@ const InventoryTable = ({
                   <TableCell className="px-6 py-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span className="truncate max-w-[160px] text-sm">
+                      <span className="truncate max-w-40 text-sm">
                         {property.locality ? `${property.locality}, ` : ""}
                         {property.city}
                       </span>

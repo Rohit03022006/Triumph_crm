@@ -73,7 +73,7 @@ const LogsTable = ({
 
   if (isLoading) {
     return (
-      <div className="bg-white border border-border/70 rounded-xl p-12 text-center text-slate-500 shadow-xs">
+      <div className="bg-card border border-border/70 rounded-xl p-12 text-center text-muted-foreground shadow-xs">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-3" />
         <p className="text-sm font-medium">Loading audit logs...</p>
       </div>
@@ -82,10 +82,10 @@ const LogsTable = ({
 
   if (isError) {
     return (
-      <div className="bg-white border border-border/70 rounded-xl p-12 text-center text-danger shadow-xs">
+      <div className="bg-card border border-border/70 rounded-xl p-12 text-center text-destructive shadow-xs">
         <AlertCircle className="w-8 h-8 mx-auto mb-3" />
         <p className="text-sm font-semibold">Failed to load audit logs.</p>
-        <Button onClick={onRetry} variant="outline" className="mt-3">
+        <Button onClick={onRetry} variant="outline" className="mt-3 bg-card border-border text-foreground hover:bg-muted cursor-pointer">
           Retry
         </Button>
       </div>
@@ -94,16 +94,16 @@ const LogsTable = ({
 
   if (logs.length === 0) {
     return (
-      <div className="bg-white border border-border/70 rounded-xl p-16 text-center text-slate-500 shadow-xs">
-        <History className="w-10 h-10 mx-auto mb-3 text-slate-300" />
-        <h3 className="text-base font-semibold text-slate-800">No Audit Logs Found</h3>
-        <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
+      <div className="bg-card border border-border/70 rounded-xl p-16 text-center text-muted-foreground shadow-xs">
+        <History className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+        <h3 className="text-base font-semibold text-foreground">No Audit Logs Found</h3>
+        <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
           {hasActiveFilters
             ? "No logs matched your current filters. Try resetting the search or filter options."
             : "Every time a property is edited, created, or its status changes, an audit record will be logged here."}
         </p>
         {hasActiveFilters && (
-          <Button onClick={onResetFilters} variant="outline" className="mt-4">
+          <Button onClick={onResetFilters} variant="outline" className="mt-4 bg-card border-border text-foreground hover:bg-muted cursor-pointer">
             Clear Filters
           </Button>
         )}
@@ -112,11 +112,11 @@ const LogsTable = ({
   }
 
   return (
-    <div className="bg-white border border-border/70 rounded-xl shadow-xs overflow-hidden">
+    <div className="bg-card border border-border/70 rounded-xl shadow-xs overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-sm">
           <thead>
-            <tr className="bg-slate-50/80 border-b border-border/70 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+            <tr className="bg-muted/40 border-b border-border/70 text-xs font-semibold text-foreground uppercase tracking-wider">
               <th className="py-3.5 px-4">Date & Time</th>
               <th className="py-3.5 px-4">Executive</th>
               <th className="py-3.5 px-4">Action</th>
@@ -129,14 +129,14 @@ const LogsTable = ({
             {logs.map((log) => {
               const actionCfg = ACTION_CONFIG[log.action] || {
                 label: log.action,
-                badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
-                dotClass: "bg-slate-400",
+                badgeClass: "bg-muted text-foreground border-border",
+                dotClass: "bg-muted-foreground",
               };
 
               const hasChanges = Array.isArray(log.changes) && log.changes.length > 0;
 
               return (
-                <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
+                <tr key={log.id} className="hover:bg-muted/30 transition-colors">
                   {/* Timestamp (1st row: Date, 2nd row: Time, 3rd row: Relative Time) */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     {(() => {
@@ -144,15 +144,15 @@ const LogsTable = ({
                       const relTime = getRelativeTime(log.createdAt);
                       return (
                         <div className="space-y-0.5">
-                          <div className="font-semibold text-xs text-slate-800">{dt.date}</div>
+                          <div className="font-semibold text-xs text-foreground">{dt.date}</div>
                           {dt.time && (
-                            <div className="text-[12px] text-slate-500 flex items-center gap-1 font-medium">
-                              <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+                            <div className="text-[12px] text-muted-foreground flex items-center gap-1 font-medium">
+                              <Clock className="w-3 h-3 text-muted-foreground shrink-0" />
                               <span>{dt.time}</span>
                             </div>
                           )}
                           {relTime && (
-                            <div className="text-[12px] text-slate-400 font-normal">
+                            <div className="text-[12px] text-muted-foreground font-normal">
                               {relTime}
                             </div>
                           )}
@@ -165,12 +165,12 @@ const LogsTable = ({
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     <div className="flex items-center gap-2.5">
                     <div>
-                        <div className="font-semibold text-slate-900 leading-tight">
+                        <div className="font-semibold text-foreground leading-tight">
                           {log.userName || "Unknown"}
                         </div>
-                        <div className="text-xs text-slate-500 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
                           {log.userRole && (
-                            <span className="uppercase text-[10px] font-bold px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded">
+                            <span className="uppercase text-[10px] font-bold px-1.5 py-0.2 bg-muted text-foreground rounded">
                               {log.userRole}
                             </span>
                           )} 
@@ -191,29 +191,29 @@ const LogsTable = ({
 
                   {/* Property Title & Deal Type */}
                   <td className="py-3.5 px-4">
-                    <div className="font-semibold text-slate-900 flex items-center gap-1.5">
+                    <div className="font-semibold text-foreground flex items-center gap-1.5">
                       {log.propertyId ? (
                         <Link
                           to={`${basePath}/inventory/${log.propertyId}`}
                           className="hover:text-primary transition-colors hover:underline flex items-center gap-1 line-clamp-1 max-w-[220px]"
                         >
                           <span>{log.propertyTitle}</span>
-                          <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
+                          <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
                         </Link>
                       ) : (
-                        <span className="line-clamp-1 max-w-[220px] text-slate-700">
+                        <span className="line-clamp-1 max-w-[220px] text-foreground">
                           {log.propertyTitle}
                         </span>
                       )}
                     </div>
                     {log.dealType && (
-                      <div className="text-xs text-slate-500 font-medium mt-0.5">{log.dealType}</div>
+                      <div className="text-xs text-muted-foreground font-medium mt-0.5">{log.dealType}</div>
                     )}
                   </td>
 
                   {/* Change Summary */}
                   <td className="py-3.5 px-4">
-                    <p className="text-sm text-slate-700 font-medium line-clamp-2 max-w-[360px]">
+                    <p className="text-sm text-foreground font-medium line-clamp-2 max-w-[360px]">
                       {log.summary || "Inventory record modified"}
                     </p>
                   </td>
@@ -225,13 +225,13 @@ const LogsTable = ({
                         variant="outline"
                         size="sm"
                         onClick={() => onSelectLog(log)}
-                        className="h-8 px-2.5 text-xs font-semibold bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+                        className="h-8 px-2.5 text-xs font-semibold bg-card border-border text-foreground hover:bg-muted cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5 mr-1 text-primary" />
                         View Diff ({log.changes.length})
                       </Button>
                     ) : (
-                      <span className="text-xs text-slate-400 italic">No field details</span>
+                      <span className="text-xs text-muted-foreground italic">No field details</span>
                     )}
                   </td>
                 </tr>

@@ -159,18 +159,18 @@ const ApprovedList = () => {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white border border-t-0 border-border/70 rounded-b-xl text-sm text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-card border border-t-0 border-border/70 rounded-b-xl text-sm text-muted-foreground">
             <div>
               Showing{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-foreground">
                 {(pagination.page - 1) * pagination.limit + 1}
               </span>{" "}
               to{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-foreground">
                 {Math.min(pagination.page * pagination.limit, pagination.total)}
               </span>{" "}
               of{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-foreground">
                 {pagination.total}
               </span>{" "}
               submissions
@@ -182,13 +182,13 @@ const ApprovedList = () => {
                 size="sm"
                 disabled={pagination.page <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="h-8 px-3 text-xs"
+                className="h-8 px-3 text-xs bg-card border-border text-foreground hover:bg-muted hover:text-foreground cursor-pointer"
               >
                 <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                 Previous
               </Button>
 
-              <span className="text-xs font-semibold px-2">
+              <span className="text-xs font-semibold px-2 text-foreground">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
 
@@ -199,7 +199,7 @@ const ApprovedList = () => {
                 onClick={() =>
                   setCurrentPage((p) => Math.min(pagination.totalPages, p + 1))
                 }
-                className="h-8 px-3 text-xs"
+                className="h-8 px-3 text-xs bg-card border-border text-foreground hover:bg-muted hover:text-foreground cursor-pointer"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />

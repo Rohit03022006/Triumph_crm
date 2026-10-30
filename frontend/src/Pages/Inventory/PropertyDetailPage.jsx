@@ -314,7 +314,7 @@ const PropertyDetailPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[500px]">
+      <div className="flex items-center justify-center min-h-125">
         <div className="flex flex-col items-center gap-3">
           <div className="w-9 h-9 border-3 border-primary border-t-transparent rounded-full animate-spin" />
           <p className="text-base text-slate-600 font-medium">
@@ -470,7 +470,7 @@ const PropertyDetailPage = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate(`${basePath}/${property.id}/print`)}
-                className={`w-full bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm h-10 px-3 shadow-xs flex items-center justify-center gap-2 ${
+                className={`w-full bg-card border-border text-foreground hover:bg-muted font-semibold text-sm h-10 px-3 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
                   isPrintColSpan2 ? "col-span-2" : "col-span-1"
                 }`}
                 title="Print Property Dossier"
@@ -484,9 +484,9 @@ const PropertyDetailPage = () => {
                 <Button
                   variant="outline"
                   onClick={() => setIsUnitsOpen(true)}
-                  className="col-span-1 w-full bg-white border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-sm h-10 px-3 flex items-center justify-center"
+                  className="col-span-1 w-full bg-card border-border text-foreground hover:bg-muted font-medium text-sm h-10 px-3 flex items-center justify-center cursor-pointer"
                 >
-                  <Layers className="w-4 h-4 mr-2 text-blue-600 shrink-0" />
+                  <Layers className="w-4 h-4 mr-2 text-primary shrink-0" />
                   <span className="truncate">
                     Manage Units ({property.units?.length || 0})
                   </span>
@@ -573,15 +573,15 @@ const PropertyDetailPage = () => {
                 onClick={() => setIsReviewDialogOpen(true)}
                 disabled={rejectMut.isPending || approveMut.isPending}
                 variant="outline"
-                className="bg-white border-amber-300 text-amber-900 hover:bg-amber-100/70 text-sm font-semibold h-10 px-4"
+                className="bg-card border-border text-foreground hover:bg-muted text-sm font-semibold h-10 px-4 cursor-pointer"
               >
-                <XCircle className="w-4 h-4 mr-1.5 text-amber-700" />
+                <XCircle className="w-4 h-4 mr-1.5 text-muted-foreground" />
                 Request Revision
               </Button>
               <Button
                 onClick={() => approveMut.mutate()}
                 disabled={approveMut.isPending || rejectMut.isPending}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold h-10 px-5 shadow-xs"
+                className="bg-primary hover:bg-brand-dark text-primary-foreground text-sm font-semibold h-10 px-5 shadow-xs cursor-pointer"
               >
                 <CheckCircle className="w-4 h-4 mr-1.5" />
                 {approveMut.isPending ? "Approving..." : "Approve Listing"}
@@ -1484,7 +1484,7 @@ const PropertyDetailPage = () => {
                                 type="button"
                                 size="sm"
                                 onClick={handleGrantClearance}
-                                className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium cursor-pointer"
+                                className="h-7 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer"
                               >
                                 <Check className="w-3.5 h-3.5 mr-1" /> Grant Clearance
                               </Button>
@@ -1496,9 +1496,9 @@ const PropertyDetailPage = () => {
                                   setAdminQueryText("");
                                   setIsAdminQueryModalOpen(true);
                                 }}
-                                className="h-7 text-xs text-amber-700 border-amber-300 hover:bg-amber-50 cursor-pointer font-medium"
+                                className="h-7 text-xs bg-card border-border text-foreground hover:bg-muted cursor-pointer font-medium"
                               >
-                                <HelpCircle className="w-3.5 h-3.5 mr-1" /> Ask Query
+                                <HelpCircle className="w-3.5 h-3.5 mr-1 text-muted-foreground" /> Ask Query
                               </Button>
                               <Button
                                 type="button"
@@ -1508,7 +1508,7 @@ const PropertyDetailPage = () => {
                                   setAdminRejectText("");
                                   setIsAdminRejectModalOpen(true);
                                 }}
-                                className="h-7 text-xs text-rose-700 border-rose-300 hover:bg-rose-50 cursor-pointer font-medium"
+                                className="h-7 text-xs text-destructive border-border hover:bg-destructive/10 cursor-pointer font-medium"
                               >
                                 <X className="w-3.5 h-3.5 mr-1" /> Reject
                               </Button>
@@ -1517,7 +1517,7 @@ const PropertyDetailPage = () => {
                                 variant="ghost"
                                 size="sm"
                                 onClick={handleDismissRequest}
-                                className="h-7 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
+                                className="h-7 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                               >
                                 Dismiss
                               </Button>
@@ -1613,7 +1613,7 @@ const PropertyDetailPage = () => {
                         type="submit"
                         size="sm"
                         disabled={isExecutiveReplying}
-                        className="w-full h-8 text-xs bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer"
+                        className="w-full h-8 text-xs bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer"
                       >
                         <Send className="w-3.5 h-3.5 mr-1.5" />
                         {isExecutiveReplying ? "Submitting..." : "Send Reply to Administrator"}
@@ -1736,7 +1736,7 @@ const PropertyDetailPage = () => {
                     <Button
                       type="button"
                       onClick={() => setIsRequestSellerOpen(true)}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs h-9 shadow-xs gap-2 transition-colors cursor-pointer"
+                      className="w-full bg-primary hover:bg-brand-dark text-primary-foreground font-semibold text-xs h-9 shadow-xs gap-2 transition-colors cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       Request Seller Info
@@ -1853,7 +1853,7 @@ const PropertyDetailPage = () => {
                 type="submit"
                 size="sm"
                 disabled={isSubmittingRequest}
-                className="bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer gap-1.5"
+                className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 {isSubmittingRequest ? "Submitting..." : "Submit Request"}
@@ -1908,7 +1908,7 @@ const PropertyDetailPage = () => {
               <Button
                 type="submit"
                 size="sm"
-                className="bg-amber-600 hover:bg-amber-700 text-white font-medium cursor-pointer gap-1.5"
+                className="bg-primary hover:bg-brand-dark text-primary-foreground font-semibold cursor-pointer gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 Send Query
@@ -1962,7 +1962,7 @@ const PropertyDetailPage = () => {
               <Button
                 type="submit"
                 size="sm"
-                className="bg-rose-600 hover:bg-rose-700 text-white font-medium cursor-pointer gap-1.5"
+                className="bg-destructive hover:bg-destructive/90 text-white font-semibold cursor-pointer gap-1.5"
               >
                 <X className="w-3.5 h-3.5" />
                 Confirm Rejection

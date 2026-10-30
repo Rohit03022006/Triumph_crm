@@ -78,9 +78,9 @@ const LogDiffDialog = ({ log, onClose }) => {
 
   return (
     <Dialog open={Boolean(log)} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-3xl max-w-3xl max-h-[85vh] overflow-y-auto p-6">
+      <DialogContent className="sm:max-w-3xl max-w-3xl max-h-[85vh] overflow-y-auto p-6 bg-card border border-border">
         <DialogHeader className="pb-3 border-b border-border/70">
-          <DialogTitle className="text-xl font-heading font-bold text-slate-900 flex items-center justify-between">
+          <DialogTitle className="text-xl font-heading font-bold text-foreground flex items-center justify-between">
             <span>Change Details</span>
             <span
               className={`text-xs px-2.5 py-1 rounded-full border font-semibold ${actionCfg.badgeClass}`}
@@ -88,27 +88,27 @@ const LogDiffDialog = ({ log, onClose }) => {
               {actionCfg.label}
             </span>
           </DialogTitle>
-          <DialogDescription className="text-xs text-slate-500 mt-1">
+          <DialogDescription className="text-xs text-muted-foreground mt-1">
             Modified on {formatDisplayDate(log.createdAt)} by{" "}
-            <span className="font-semibold text-slate-700">{log.userName}</span>
+            <span className="font-semibold text-foreground">{log.userName}</span>
           </DialogDescription>
         </DialogHeader>
 
         {/* Property Context Box */}
-        <div className="bg-slate-50 rounded-lg p-3.5 border border-border/70 mt-3 text-sm">
+        <div className="bg-muted/40 rounded-lg p-3.5 border border-border/70 mt-3 text-sm">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs text-slate-500 uppercase font-semibold">Property</span>
-              <p className="font-bold text-slate-900">{log.propertyTitle}</p>
+              <span className="text-xs text-muted-foreground uppercase font-semibold">Property</span>
+              <p className="font-bold text-foreground">{log.propertyTitle}</p>
             </div>
             {log.dealType && (
-              <span className="text-xs font-semibold px-2 py-0.5 bg-white border border-slate-200 rounded text-slate-700">
+              <span className="text-xs font-semibold px-2 py-0.5 bg-card border border-border rounded text-foreground">
                 {log.dealType}
               </span>
             )}
           </div>
           {log.summary && (
-            <p className="text-xs text-slate-600 mt-2 font-medium bg-white p-2 rounded border border-slate-200/60">
+            <p className="text-xs text-foreground mt-2 font-medium bg-card p-2 rounded border border-border/60">
               {log.summary}
             </p>
           )}
@@ -117,22 +117,22 @@ const LogDiffDialog = ({ log, onClose }) => {
         {/* Modified Fields Table */}
         <div className="mt-5 space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase text-slate-600 tracking-wider">
+            <h4 className="text-xs font-bold uppercase text-foreground tracking-wider">
               Modified Fields ({log.changes?.length || 0})
             </h4>
           </div>
 
-          <div className="border border-border/70 rounded-xl overflow-hidden bg-white shadow-2xs">
+          <div className="border border-border/70 rounded-xl overflow-hidden bg-card shadow-2xs">
             <Table>
-              <TableHeader className="bg-slate-50/80">
+              <TableHeader className="bg-muted/40">
                 <TableRow className="border-b border-border/70">
-                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-slate-600 tracking-wider">
+                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-foreground tracking-wider">
                     Field Name
                   </TableHead>
-                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-slate-600 tracking-wider">
+                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-foreground tracking-wider">
                     Previous Value
                   </TableHead>
-                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-slate-600 tracking-wider">
+                  <TableHead className="w-1/3 py-3 px-4 text-xs font-bold uppercase text-foreground tracking-wider">
                     Updated Value
                   </TableHead>
                 </TableRow>
@@ -142,15 +142,15 @@ const LogDiffDialog = ({ log, onClose }) => {
                   log.changes.map((ch, idx) => (
                     <TableRow
                       key={idx}
-                      className="hover:bg-slate-50/50 transition-colors"
+                      className="hover:bg-muted/30 transition-colors"
                     >
                       {/* Field Name */}
                       <TableCell className="py-3 px-4 align-top">
-                        <div className="font-semibold text-slate-900 text-xs sm:text-sm">
+                        <div className="font-semibold text-foreground text-xs sm:text-sm">
                           {ch.label || ch.field}
                         </div>
                         {ch.label && ch.field && ch.label !== ch.field && (
-                          <div className="text-[10px] font-mono text-slate-400 mt-0.5">
+                          <div className="text-[10px] font-mono text-muted-foreground mt-0.5">
                             {ch.field}
                           </div>
                         )}
@@ -175,7 +175,7 @@ const LogDiffDialog = ({ log, onClose }) => {
                   <TableRow>
                     <TableCell
                       colSpan={3}
-                      className="py-8 text-center text-xs text-slate-400 italic"
+                      className="py-8 text-center text-xs text-muted-foreground italic"
                     >
                       No specific field changes recorded for this action.
                     </TableCell>
@@ -187,7 +187,7 @@ const LogDiffDialog = ({ log, onClose }) => {
         </div>
 
         <div className="mt-6 flex justify-end">
-          <Button onClick={onClose} className="h-9 px-4 text-sm font-semibold">
+          <Button onClick={onClose} className="h-9 px-4 text-sm font-semibold bg-primary hover:bg-brand-dark text-primary-foreground cursor-pointer">
             Close
           </Button>
         </div>
